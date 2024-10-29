@@ -8,6 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,21 +32,54 @@ public class ChildrenServiceImpl implements ChildrenService {
     }
 
     @Override
-    public ChildrenDTO getChildById(Integer childId) {
+    public ChildrenDTO getChildById(Integer childId) { // 아이 정보 가져오기
         Children child = childrenRepository.findById(childId).orElseThrow();
         return modelMapper.map(child, ChildrenDTO.class);
     }
 
     @Override
-    public void addChild(ChildrenDTO childrenDTO) {
+    public void addChild(ChildrenDTO childrenDTO) { // 프로필생성 
         Children child = modelMapper.map(childrenDTO, Children.class);
         childrenRepository.save(child);
     }
 
     @Override
-    public void updateChild(ChildrenDTO childrenDTO) {
-        Children child = modelMapper.map(childrenDTO, Children.class);
-        childrenRepository.save(child);
+    public void updateChild(ChildrenDTO childrenDTO) { // 아이 프로필 업데이트
+        // 기존 아이 정보 가져오기
+        Children existingChild = childrenRepository.findById(childrenDTO.getChildId())
+                .orElseThrow(() -> new EntityNotFoundException("아이를 찾을 수 없습니다."));
+
+        // DTO의 필드를 기존 객체에 조건부 복사 (각각 변경 가능)
+        if (childrenDTO.getName() != null) {
+            existingChild.setName(childrenDTO.getName());
+        }
+        if (childrenDTO.getBirthDate() != null) {
+            existingChild.setBirthDate(childrenDTO.getBirthDate());
+        }
+        if (childrenDTO.getGender() != null) {
+            existingChild.setGender(childrenDTO.getGender());
+        }
+        if (childrenDTO.getBloodType() != null) {
+            existingChild.setBloodType(childrenDTO.getBloodType());
+        }
+        if (childrenDTO.getBirthWeight() != null) {
+            existingChild.setBirthWeight(childrenDTO.getBirthWeight());
+        }
+        if (childrenDTO.getBirthTime() != null) {
+            existingChild.setBirthTime(childrenDTO.getBirthTime());
+        }
+        if (childrenDTO.getBirthHeight() != null) {
+            existingChild.setBirthHeight(childrenDTO.getBirthHeight());
+        }
+        if(childrenDTO.getProfilePicture() != null){
+            existingChild.setProfilePicture(childrenDTO.getProfilePicture());
+        }
+
+        // 업데이트 시간 설정
+        existingChild.setUpdatedAt(LocalDateTime.now());
+
+        // 변경된 엔티티 저장
+        childrenRepository.save(existingChild);
     }
 
     @Override

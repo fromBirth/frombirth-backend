@@ -15,5 +15,6 @@ public class WeeklyReportDTO {
     private Integer riskLevel;
     private String feedback;
     private LocalDateTime createdAt;
+    private boolean isRead;
 }
 

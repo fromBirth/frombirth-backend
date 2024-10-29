@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,6 @@ public class Children {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "order")
-    private Integer order;
-
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
@@ -49,7 +47,13 @@ public class Children {
     private Integer birthWeight;
 
     @Column(name = "birth_time")
-    private LocalDateTime birthTime;
+    private LocalTime birthTime;
+
+    @Column(name = "profile_picture")
+    private String profilePicture; // 아기 대표 사진
+
+    @Column(name = "birth_height")
+    private Integer birthHeight; // 출생 키
 
     @OneToMany(mappedBy = "children", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Record> records = new ArrayList<>();
