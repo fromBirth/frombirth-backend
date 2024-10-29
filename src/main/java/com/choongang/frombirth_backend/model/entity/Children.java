@@ -28,9 +28,6 @@ public class Children {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "child_order")
-    private Integer childOrder;
-
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
@@ -51,6 +48,12 @@ public class Children {
 
     @Column(name = "birth_time")
     private LocalTime birthTime;
+
+    @Column(name = "profile_picture")
+    private String profilePicture; // 아기 대표 사진
+
+    @Column(name = "birth_height")
+    private Integer birthHeight; // 출생 키
 
     @OneToMany(mappedBy = "children", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Record> records = new ArrayList<>();

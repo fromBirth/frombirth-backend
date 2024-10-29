@@ -53,9 +53,6 @@ public class ChildrenServiceImpl implements ChildrenService {
         if (childrenDTO.getName() != null) {
             existingChild.setName(childrenDTO.getName());
         }
-        if (childrenDTO.getChildOrder() != null) {
-            existingChild.setChildOrder(childrenDTO.getChildOrder());
-        }
         if (childrenDTO.getBirthDate() != null) {
             existingChild.setBirthDate(childrenDTO.getBirthDate());
         }
@@ -71,6 +68,12 @@ public class ChildrenServiceImpl implements ChildrenService {
         if (childrenDTO.getBirthTime() != null) {
             existingChild.setBirthTime(childrenDTO.getBirthTime());
         }
+        if (childrenDTO.getBirthHeight() != null) {
+            existingChild.setBirthHeight(childrenDTO.getBirthHeight());
+        }
+        if(childrenDTO.getProfilePicture() != null){
+            existingChild.setProfilePicture(childrenDTO.getProfilePicture());
+        }
 
         // 업데이트 시간 설정
         existingChild.setUpdatedAt(LocalDateTime.now());
@@ -78,8 +81,6 @@ public class ChildrenServiceImpl implements ChildrenService {
         // 변경된 엔티티 저장
         childrenRepository.save(existingChild);
     }
-
-
 
     @Override
     public void deleteChild(Integer childId) {
