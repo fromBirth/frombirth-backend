@@ -45,4 +45,7 @@ public class PhotoController {
         photoService.deletePhoto(photoId);
         return ResponseEntity.noContent().build();
     }
+
+
+
 }
