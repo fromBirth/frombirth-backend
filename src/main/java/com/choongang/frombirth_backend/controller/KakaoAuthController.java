@@ -44,7 +44,7 @@ public class KakaoAuthController {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", "authorization_code");
         requestBody.add("client_id", clientId);
-        requestBody.add("redirect_uri", "http://172.30.1.18:8181/api/kakao/callback");
+        requestBody.add("redirect_uri", "http://localhost:8181/api/kakao/callback");
         requestBody.add("code", code);
         requestBody.add("client_secret", clientSecret);
 
