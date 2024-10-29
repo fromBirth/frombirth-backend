@@ -1,5 +1,8 @@
 package com.choongang.frombirth_backend.controller;
 
+import com.choongang.frombirth_backend.model.dto.UserDTO;
+import com.choongang.frombirth_backend.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,13 @@ public class KakaoAuthController {
 
     @Value("${kakao.client-secret}")
     private String clientSecret;
+
+    private final UserService userService;
+
+    @Autowired
+    public KakaoAuthController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/callback")
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
@@ -58,9 +68,17 @@ public class KakaoAuthController {
 
             if (userInfoResponse.getStatusCode().is2xxSuccessful()) {
                 Map<String, Object> userInfo = userInfoResponse.getBody();
+
                 System.out.println(userInfo);
-                // TODO: 사용자 정보를 데이터베이스에 저장하거나, 기존 사용자와 비교하여 처리
-                return ResponseEntity.ok(userInfo);
+                // 카카오 사용자 정보를 기반으로 UserDTO 생성
+                UserDTO userDTO = new UserDTO();
+                userDTO.setKakaoId(Long.parseLong(userInfo.get("id").toString()));
+                userDTO.setEmail(((Map<String, Object>) userInfo.get("kakao_account")).get("email").toString());
+
+                // 사용자 정보를 데이터베이스에 저장하거나, 기존 사용자 정보 반환
+                UserDTO registeredUser = userService.createUser(userDTO);
+
+                return ResponseEntity.ok(registeredUser);
             } else {
                 return ResponseEntity.status(userInfoResponse.getStatusCode()).body("사용자 정보 요청 실패");
             }

@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 public class UserDTO {
     private Integer userId;
     private Long kakaoId;
-    private String username;
-    private String passwordHash;
+    private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
