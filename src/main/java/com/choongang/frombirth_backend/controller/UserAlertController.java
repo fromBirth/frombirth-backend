@@ -19,7 +19,7 @@ public class UserAlertController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<UserAlertDTO>> getAllAlerts(@PathVariable String userId) {
+    public ResponseEntity<List<UserAlertDTO>> getAllAlerts(@PathVariable Integer userId) {
         return ResponseEntity.ok(userAlertService.getAllAlerts(userId));
     }
 

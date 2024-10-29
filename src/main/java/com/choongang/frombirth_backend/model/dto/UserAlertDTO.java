@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserAlertDTO {
     private Integer notificationId;
-    private String userId;
+    private Integer userId;
     private String message;
     private Boolean isRead;
     private LocalDateTime createdAt;

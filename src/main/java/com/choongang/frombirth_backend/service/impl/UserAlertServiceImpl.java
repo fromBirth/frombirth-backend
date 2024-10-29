@@ -23,7 +23,7 @@ public class UserAlertServiceImpl implements UserAlertService {
     }
 
     @Override
-    public List<UserAlertDTO> getAllAlerts(String userId) {
+    public List<UserAlertDTO> getAllAlerts(Integer userId) {
         return userAlertRepository.findByUserId(userId).stream()
                 .map(alert -> modelMapper.map(alert, UserAlertDTO.class))
                 .collect(Collectors.toList());

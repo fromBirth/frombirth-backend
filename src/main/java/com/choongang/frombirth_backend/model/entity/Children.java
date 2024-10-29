@@ -22,7 +22,7 @@ public class Children {
     private Integer childId;
 
     @Column(name = "user_id", nullable = false, length = 50)
-    private String userId;
+    private Integer userId;
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;

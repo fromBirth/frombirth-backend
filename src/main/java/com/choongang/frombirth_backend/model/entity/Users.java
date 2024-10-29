@@ -18,7 +18,10 @@ import java.time.LocalDateTime;
 public class Users {
     @Id
     @Column(name = "user_id", nullable = false, length = 50)
-    private String userId;
+    private Integer userId;
+
+    @Column(name = "kakao_id", nullable = false, length = 50)
+    private Long kakaoId;
 
     @Column(name = "username", nullable = false, length = 50)
     private String username;

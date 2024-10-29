@@ -23,7 +23,7 @@ public class ChildrenServiceImpl implements ChildrenService {
     }
 
     @Override
-    public List<ChildrenDTO> getAllChildren(String userId) {
+    public List<ChildrenDTO> getAllChildren(Integer userId) {
         return childrenRepository.findByUserId(userId).stream()
                 .map(child -> modelMapper.map(child, ChildrenDTO.class))
                 .collect(Collectors.toList());

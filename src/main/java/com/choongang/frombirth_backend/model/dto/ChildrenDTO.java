@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class ChildrenDTO {
     private Integer childId;
-    private String userId;
+    private Integer userId;
 
     @NotNull(message = "이름은 필수입니다.")
     private String name;

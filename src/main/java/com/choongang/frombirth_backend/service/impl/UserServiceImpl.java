@@ -20,15 +20,15 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> getAllUsers() {
         List<Users> users = usersRepository.findAll();
         return users.stream()
-                .map(user -> new UserDTO(user.getUserId(), user.getUsername(), user.getPasswordHash(), user.getCreatedAt(), user.getUpdatedAt()))
+                .map(user -> new UserDTO(user.getUserId(),user.getKakaoId(), user.getUsername(), user.getPasswordHash(), user.getCreatedAt(), user.getUpdatedAt()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserDTO getUserById(String userId) {
+    public UserDTO getUserById(Integer userId) {
         Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
-        return new UserDTO(user.getUserId(), user.getUsername(), user.getPasswordHash(), user.getCreatedAt(), user.getUpdatedAt());
+        return new UserDTO(user.getUserId(),user.getKakaoId(), user.getUsername(), user.getPasswordHash(), user.getCreatedAt(), user.getUpdatedAt());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(String userId, UserDTO userDTO) {
+    public UserDTO updateUser(Integer userId, UserDTO userDTO) {
         Users existingUser = usersRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
         existingUser.setUsername(userDTO.getUsername());
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String userId) {
+    public void deleteUser(Integer userId) {
         Users existingUser = usersRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
         usersRepository.delete(existingUser);

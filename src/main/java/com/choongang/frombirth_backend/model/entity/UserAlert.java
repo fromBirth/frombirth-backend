@@ -19,7 +19,7 @@ public class UserAlert {
     private Integer notificationId;
 
     @Column(name = "user_id", nullable = false, length = 50)
-    private String userId;
+    private Integer userId;
 
     @Column(name = "message", columnDefinition = "TEXT", nullable = false)
     private String message;
