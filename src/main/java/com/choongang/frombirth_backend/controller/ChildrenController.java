@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/children")
+@CrossOrigin(origins = "*") // 모든 출처 허용 (개발용)
 public class ChildrenController {
     private final ChildrenService childrenService;
 
@@ -20,29 +21,31 @@ public class ChildrenController {
         this.childrenService = childrenService;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/all/{userId}") // UserId에 대한 아이 목록
     public ResponseEntity<List<ChildrenDTO>> getAllChildren(@PathVariable Integer userId) {
         return ResponseEntity.ok(childrenService.getAllChildren(userId));
     }
 
-    @GetMapping("/{childId}")
+
+    @GetMapping("/child/{childId}") // 아이 개별 확인 get방식
     public ResponseEntity<ChildrenDTO> getChildById(@PathVariable Integer childId) {
         return ResponseEntity.ok(childrenService.getChildById(childId));
     }
 
-    @PostMapping("/children")
+    @PostMapping("/create") //아이 프로필 생성
     public ResponseEntity<Void> addChild(@Valid @RequestBody ChildrenDTO childrenDTO) {
         childrenService.addChild(childrenDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
+
+    @PutMapping // 아이 프로필 업데이트
     public ResponseEntity<Void> updateChild(@RequestBody ChildrenDTO childrenDTO) {
         childrenService.updateChild(childrenDTO);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{childId}")
+    @DeleteMapping("/{childId}") // 아이 프로필 삭제
     public ResponseEntity<Void> deleteChild(@PathVariable Integer childId) {
         childrenService.deleteChild(childId);
         return ResponseEntity.noContent().build();
