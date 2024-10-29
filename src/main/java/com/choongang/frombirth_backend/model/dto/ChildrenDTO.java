@@ -19,7 +19,7 @@ public class ChildrenDTO {
     @NotNull(message = "이름은 필수입니다.")
     private String name;
 
-    private Integer order;
+    private Integer childOrder;
     private LocalDate birthDate;
     private String gender;
     private String bloodType;
