@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/reports")
+@CrossOrigin(origins = "*") // 모든 출처 허용 (개발용)
 public class WeeklyReportController {
     private final WeeklyReportService weeklyReportService;
 

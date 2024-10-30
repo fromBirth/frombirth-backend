@@ -40,6 +40,9 @@ public class ChildrenServiceImpl implements ChildrenService {
     @Override
     public void addChild(ChildrenDTO childrenDTO) { // 프로필생성 
         Children child = modelMapper.map(childrenDTO, Children.class);
+
+        // 프로필 생성 시간 설정
+        child.setCreatedAt(LocalDateTime.now());
         childrenRepository.save(child);
     }
 

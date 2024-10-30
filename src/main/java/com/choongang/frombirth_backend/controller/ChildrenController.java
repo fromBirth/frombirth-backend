@@ -39,13 +39,13 @@ public class ChildrenController {
     }
 
 
-    @PutMapping // 아이 프로필 업데이트
+    @PutMapping("/update") // 아이 프로필 업데이트
     public ResponseEntity<Void> updateChild(@RequestBody ChildrenDTO childrenDTO) {
         childrenService.updateChild(childrenDTO);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{childId}") // 아이 프로필 삭제
+    @DeleteMapping("/delete/{childId}") // 아이 프로필 삭제
     public ResponseEntity<Void> deleteChild(@PathVariable Integer childId) {
         childrenService.deleteChild(childId);
         return ResponseEntity.noContent().build();

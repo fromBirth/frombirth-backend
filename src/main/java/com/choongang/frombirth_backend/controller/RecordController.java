@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/records")
+@CrossOrigin(origins = "*") // 모든 출처 허용 (개발용)
 public class RecordController {
     private final RecordService recordService;
 
@@ -18,29 +19,29 @@ public class RecordController {
         this.recordService = recordService;
     }
 
-    @GetMapping("/child/{childId}")
+    @GetMapping("/all/{childId}") // 아이의 전체 기록 불러오기
     public ResponseEntity<List<RecordDTO>> getAllRecords(@PathVariable Integer childId) {
         return ResponseEntity.ok(recordService.getAllRecords(childId));
     }
 
-    @GetMapping("/{recordId}")
+    @GetMapping("/child/{recordId}") // 아이의 기록 불러오기
     public ResponseEntity<RecordDTO> getRecordById(@PathVariable Integer recordId) {
         return ResponseEntity.ok(recordService.getRecordById(recordId));
     }
 
-    @PostMapping
+    @PostMapping("/create") //아이 기록 생성
     public ResponseEntity<Void> addRecord(@RequestBody RecordDTO recordDTO) {
         recordService.addRecord(recordDTO);
         return ResponseEntity.status(201).build();
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<Void> updateRecord(@RequestBody RecordDTO recordDTO) {
         recordService.updateRecord(recordDTO);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{recordId}")
+    @DeleteMapping("/delete/{recordId}")
     public ResponseEntity<Void> deleteRecord(@PathVariable Integer recordId) {
         recordService.deleteRecord(recordId);
         return ResponseEntity.noContent().build();

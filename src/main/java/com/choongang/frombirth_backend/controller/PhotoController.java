@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/photos")
+@CrossOrigin(origins = "*") // 모든 출처 허용 (개발용)
 public class PhotoController {
     private final PhotoService photoService;
 
@@ -18,29 +19,29 @@ public class PhotoController {
         this.photoService = photoService;
     }
 
-    @GetMapping("/record/{recordId}")
+    @GetMapping("/all/{recordId}")
     public ResponseEntity<List<PhotoDTO>> getAllPhotos(@PathVariable Integer recordId) {
         return ResponseEntity.ok(photoService.getAllPhotos(recordId));
     }
 
-    @GetMapping("/{photoId}")
+    @GetMapping("/record/{photoId}")
     public ResponseEntity<PhotoDTO> getPhotoById(@PathVariable Integer photoId) {
         return ResponseEntity.ok(photoService.getPhotoById(photoId));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> addPhoto(@RequestBody PhotoDTO photoDTO) {
         photoService.addPhoto(photoDTO);
         return ResponseEntity.status(201).build();
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<Void> updatePhoto(@RequestBody PhotoDTO photoDTO) {
         photoService.updatePhoto(photoDTO);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{photoId}")
+    @DeleteMapping("/delete/{photoId}")
     public ResponseEntity<Void> deletePhoto(@PathVariable Integer photoId) {
         photoService.deletePhoto(photoId);
         return ResponseEntity.noContent().build();
