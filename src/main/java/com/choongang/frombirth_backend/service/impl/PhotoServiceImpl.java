@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,12 +39,14 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public void addPhoto(PhotoDTO photoDTO) {
         Photo photo = modelMapper.map(photoDTO, Photo.class);
+        photo.setCreatedAt(LocalDateTime.now());
         photoRepository.save(photo);
     }
 
     @Override
     public void updatePhoto(PhotoDTO photoDTO) {
         Photo photo = modelMapper.map(photoDTO, Photo.class);
+        photo.setCreatedAt(LocalDateTime.now());
         photoRepository.save(photo);
     }
 
