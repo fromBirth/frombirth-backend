@@ -31,6 +31,9 @@ public class Record {
     @Column(name = "weight")
     private Float weight;
 
+    @Column(name = "title", columnDefinition = "TEXT")
+    private String title;
+
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 

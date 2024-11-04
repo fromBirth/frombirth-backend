@@ -16,6 +16,7 @@ public class RecordDTO {
     private LocalDate recordDate;
     private Float height;
     private Float weight;
+    private String title;
     private String content;
     private Integer videoResult;
     private LocalDateTime createdAt;
