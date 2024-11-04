@@ -5,6 +5,7 @@ package com.choongang.frombirth_backend;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * AppConfig 클래스는 애플리케이션에서 사용되는 Bean(빈)들을 설정하고 관리하는 역할을 합니다.
@@ -23,5 +24,10 @@ public class AppConfig {
     @Bean  // 이 어노테이션은 해당 메서드에서 반환되는 객체를 스프링 컨텍스트에서 빈으로 등록함을 나타냅니다.
     public ModelMapper modelMapper() {
         return new ModelMapper();  // ModelMapper 객체 생성 후 반환
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }
