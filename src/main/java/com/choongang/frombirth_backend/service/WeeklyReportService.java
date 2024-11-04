@@ -8,6 +8,5 @@ public interface WeeklyReportService {
     List<WeeklyReportDTO> getAllReports(Integer childId);
     WeeklyReportDTO getReportById(Integer reportId);
     void addReport(WeeklyReportDTO weeklyReportDTO);
-    void updateReport(WeeklyReportDTO weeklyReportDTO);
     void deleteReport(Integer reportId);
 }

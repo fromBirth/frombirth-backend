@@ -19,29 +19,23 @@ public class WeeklyReportController {
         this.weeklyReportService = weeklyReportService;
     }
 
-    @GetMapping("/child/{childId}")
+    @GetMapping("/all/{childId}")
     public ResponseEntity<List<WeeklyReportDTO>> getAllReports(@PathVariable Integer childId) {
         return ResponseEntity.ok(weeklyReportService.getAllReports(childId));
     }
 
-    @GetMapping("/{reportId}")
+    @GetMapping("report/{reportId}")
     public ResponseEntity<WeeklyReportDTO> getReportById(@PathVariable Integer reportId) {
         return ResponseEntity.ok(weeklyReportService.getReportById(reportId));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> addReport(@RequestBody WeeklyReportDTO weeklyReportDTO) {
         weeklyReportService.addReport(weeklyReportDTO);
         return ResponseEntity.status(201).build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateReport(@RequestBody WeeklyReportDTO weeklyReportDTO) {
-        weeklyReportService.updateReport(weeklyReportDTO);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{reportId}")
+    @DeleteMapping("/delete/{reportId}")
     public ResponseEntity<Void> deleteReport(@PathVariable Integer reportId) {
         weeklyReportService.deleteReport(reportId);
         return ResponseEntity.noContent().build();

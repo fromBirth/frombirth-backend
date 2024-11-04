@@ -30,6 +30,7 @@ public class WeeklyReport {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name =" is_read",nullable = false)
-    private Integer isRead;
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead; // Integer에서 boolean으로 변경
+
 }

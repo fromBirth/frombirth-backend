@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,12 +39,7 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     @Override
     public void addReport(WeeklyReportDTO weeklyReportDTO) {
         WeeklyReport report = modelMapper.map(weeklyReportDTO, WeeklyReport.class);
-        weeklyReportRepository.save(report);
-    }
-
-    @Override
-    public void updateReport(WeeklyReportDTO weeklyReportDTO) {
-        WeeklyReport report = modelMapper.map(weeklyReportDTO, WeeklyReport.class);
+        report.setCreatedAt(LocalDateTime.now());
         weeklyReportRepository.save(report);
     }
 
