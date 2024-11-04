@@ -34,7 +34,7 @@ public class Children {
     @Column(name = "gender", length = 10)
     private String gender;
 
-    @Column(name = "blood_type", length = 3)
+    @Column(name = "blood_type", length = 10)
     private String bloodType;
 
     @Column(name = "created_at", nullable = false)

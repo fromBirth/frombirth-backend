@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/children")
@@ -33,7 +34,13 @@ public class ChildrenController {
     }
 
     @PostMapping("/create") //아이 프로필 생성
-    public ResponseEntity<Void> addChild(@Valid @RequestBody ChildrenDTO childrenDTO) {
+    public ResponseEntity<String> addChild(
+             @RequestPart ChildrenDTO childrenDTO
+           ,@RequestPart MultipartFile file) {
+
+        System.out.println(file.getOriginalFilename());
+        System.out.println(childrenDTO);
+
         childrenService.addChild(childrenDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
