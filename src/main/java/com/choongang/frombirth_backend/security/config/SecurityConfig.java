@@ -26,7 +26,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${FRONTEND_URL}")
+    @Value("${frontEnd.url}")
     private String frontEndUrl;
 
     private final JwtTokenProvider jwtTokenProvider;
