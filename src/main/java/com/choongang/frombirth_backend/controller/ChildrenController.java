@@ -38,7 +38,7 @@ public class ChildrenController {
              @RequestPart ChildrenDTO childrenDTO
            ,@RequestPart MultipartFile file) {
 
-        System.out.println(file.getOriginalFilename());
+        System.out.println("profile image : " + file.getOriginalFilename());
         System.out.println(childrenDTO);
 
         childrenService.addChild(childrenDTO);
