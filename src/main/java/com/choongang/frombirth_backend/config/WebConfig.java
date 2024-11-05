@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @Value("${frontEnd.url}")
+    @Value("${FRONTEND_URL}")
     private String frontEndUrl;
 
     @Override
@@ -15,6 +15,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(frontEndUrl)  // React 개발 서버 주소
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*"); // 허용할 헤더
+                .allowCredentials(true);
     }
 }
