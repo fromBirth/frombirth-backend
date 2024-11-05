@@ -14,6 +14,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -24,6 +26,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+
+        // 필터를 적용할 경로 리스트
+        List<String> includedPaths = Arrays.asList("/api/user/me", "/auth/refresh");
+
+        // 필터를 적용할 경로가 아닌 경우에만 true 반환 (즉, 필터를 제외할 경우만 true)
+        return !includedPaths.contains(path);
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
