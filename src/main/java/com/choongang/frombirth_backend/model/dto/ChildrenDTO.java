@@ -12,6 +12,7 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ChildrenDTO {
     private Integer childId;
     private Integer userId;

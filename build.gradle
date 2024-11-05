@@ -44,6 +44,10 @@ dependencies {
 
 	// dotenv
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+
+	//AWS S3
+	implementation platform("software.amazon.awssdk:bom:2.25.31") //버전설정
+	implementation "software.amazon.awssdk:s3"
 }
 
 tasks.named('test') {
