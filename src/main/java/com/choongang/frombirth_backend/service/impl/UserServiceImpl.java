@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Value("${kakao.REST-API-key}")
+    @Value("${kakao.rest-api-key}")
     private String clientId;
 
     @Value("${kakao.client-secret}")

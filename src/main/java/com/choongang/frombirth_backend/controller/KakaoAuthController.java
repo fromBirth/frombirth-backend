@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/api/kakao")
 public class KakaoAuthController {
 
-    @Value("${kakao.REST-API-key}")
+    @Value("${kakao.rest-api-key}")
     private String clientId;
 
     @Value("${kakao.client-secret}")
@@ -29,7 +29,7 @@ public class KakaoAuthController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
-    @Value("${frontEnd.url}")
+    @Value("${FRONTEND_URL}")
     private String frontEndUrl;
 
     private final UserService userService;

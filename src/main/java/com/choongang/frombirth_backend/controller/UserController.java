@@ -24,10 +24,13 @@ public class UserController {
 
     @GetMapping("/user/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        System.out.println("유저정보찾기시작");
+        
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(401).body("Unauthorized");
         }
-
+        
+        
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Integer userId = userPrincipal.getUserId();
 

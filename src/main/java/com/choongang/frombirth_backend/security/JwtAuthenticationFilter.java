@@ -29,9 +29,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String requestURI = request.getRequestURI();
 
-        String token = resolveTokenFromCookie(request);
-
+        if ("/auth/refresh".equals(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String token = accessTokenFromCookie(request);
+        System.out.println(token);
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Integer userId = jwtTokenProvider.getUserIdFromToken(token);
@@ -45,6 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             // 토큰이 만료된 경우
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            System.out.println("토큰만료");
             response.getWriter().write("Access token expired. Please refresh your token.");
             return;
         } catch (JwtException | IllegalArgumentException e) {
@@ -58,10 +64,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     // 쿠키에서 액세스 토큰 추출
-    private String resolveTokenFromCookie(HttpServletRequest request) {
+    private String accessTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() == null) return null;
         for (Cookie cookie : request.getCookies()) {
             if ("accessToken".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
+
+    // 쿠키에서 리프레시 토큰 추출
+    private String refreshTokenFromCookie(HttpServletRequest request) {
+        if (request.getCookies() == null) return null;
+        for (Cookie cookie : request.getCookies()) {
+            if ("refreshToken".equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

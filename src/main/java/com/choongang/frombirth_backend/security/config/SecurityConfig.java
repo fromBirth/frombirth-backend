@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
@@ -24,7 +26,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${frontEnd.url}")
+    @Value("${FRONTEND_URL}")
     private String frontEndUrl;
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -47,6 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 엔드포인트 접근 권한 설정
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 모든 OPTIONS 요청 허용 (Preflight 요청 처리)
+                .antMatchers("/auth/test-login").permitAll()
+                .antMatchers("/auth/refresh").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/api/test").authenticated() // /api/test 엔드포인트는 인증 필요
                 .anyRequest().permitAll() // 그 외 모든 요청은 인증 없이 허용
                 .and()
@@ -54,7 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService),
                         UsernamePasswordAuthenticationFilter.class);
     }
-
     // AuthenticationManager 빈 등록
     @Bean
     @Override
