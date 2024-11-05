@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${JWT.SECRET.KEY}")
+    @Value("${jwt.secret.key}")
     private String secretKey;
     private Key key;
 
