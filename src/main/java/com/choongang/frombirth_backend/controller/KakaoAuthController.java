@@ -29,7 +29,7 @@ public class KakaoAuthController {
     @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
-    @Value("${FRONTEND_URL}")
+    @Value("${frontEnd.url}")
     private String frontEndUrl;
 
     private final UserService userService;

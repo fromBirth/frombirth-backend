@@ -28,7 +28,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @Value("${FRONTEND_URL}")
+    @Value("${frontEnd.url}")
     private String frontEndUrl;
 
     private final JwtTokenProvider jwtTokenProvider;
