@@ -3,12 +3,13 @@ package com.choongang.frombirth_backend.controller;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/records")
@@ -31,10 +32,20 @@ public class RecordController {
         return ResponseEntity.ok(recordService.getRecordById(recordId));
     }
 
-    @PostMapping("/create") //아이 기록 생성
-    public ResponseEntity<Void> addRecord(@RequestBody RecordDTO recordDTO) {
-        recordService.addRecord(recordDTO);
-        return ResponseEntity.status(201).build();
+    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}) //아이 기록 생성
+    public ResponseEntity<Void> addRecord(@RequestPart RecordDTO recordDTO,
+                                          @RequestPart(value = "images", required = false) MultipartFile[] images,
+                                          @RequestPart(value = "video", required = false) MultipartFile video) {
+
+        System.out.println(recordDTO.toString());
+
+        try {
+            // RecordDTO와 파일을 서비스로 전달
+            recordService.addRecord(recordDTO, images, video);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/update")

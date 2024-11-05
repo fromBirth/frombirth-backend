@@ -62,5 +62,14 @@ public class AppConfig {
         // 카카오 API 키 설정
         System.setProperty("KAKAO_REST_API_KEY", dotenv.get("KAKAO_REST_API_KEY"));
         System.setProperty("KAKAO_CLIENT_SECRET", dotenv.get("KAKAO_CLIENT_SECRET"));
+
+        // Local IP
+        System.setProperty("LOCAL_IP", dotenv.get("LOCAL_IP"));
+
+        // AWS S3
+        System.setProperty("AWS_ACCESS_KEY", dotenv.get("AWS_ACCESS_KEY"));
+        System.setProperty("AWS_SECRET_KEY", dotenv.get("AWS_SECRET_KEY"));
+        System.setProperty("AWS_REGION", dotenv.get("AWS_REGION"));
+        System.setProperty("S3_BUCKET_NAME", dotenv.get("S3_BUCKET_NAME"));
     }
 }

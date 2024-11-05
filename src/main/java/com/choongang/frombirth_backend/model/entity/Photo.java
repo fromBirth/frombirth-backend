@@ -1,6 +1,7 @@
 package com.choongang.frombirth_backend.model.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
