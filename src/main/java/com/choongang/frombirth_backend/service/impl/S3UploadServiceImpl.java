@@ -30,20 +30,31 @@ public class S3UploadServiceImpl implements S3UploadService {
         List<String> photoUrls = new ArrayList<>();
 
         for (MultipartFile photo : photos) {
-            String fileName = "record/" + diaryId + "/" + UUID.randomUUID() + "_" + photo.getOriginalFilename();
-            String contentType = determineContentType(Objects.requireNonNull(photo.getOriginalFilename()));
-            s3Client.putObject(PutObjectRequest.builder()
-                            .bucket(bucketName)
-                            .key(fileName)
-                            .contentType(contentType)           // 이미지 형식에 맞는 Content-Type 설정
-                            .contentDisposition("inline")       // 브라우저에서 직접 표시되도록 설정
-                            .build(),
-                    software.amazon.awssdk.core.sync.RequestBody.fromBytes(photo.getBytes()));
-
-            String photoUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
+            String rootPath = "record/" + diaryId;
+            String photoUrl = doUpload(rootPath, photo);
             photoUrls.add(photoUrl);
         }
         return photoUrls;
+    }
+
+    @Override
+    public String uploadProfile(MultipartFile profile, Integer userId) throws IOException {
+        String rootPath = "children/" + userId;
+        return doUpload(rootPath, profile);
+    }
+
+    private String doUpload(String rootPath, MultipartFile photo) throws IOException {
+        String fileName = rootPath + "/" + UUID.randomUUID() + "_" + photo.getOriginalFilename();
+        String contentType = determineContentType(Objects.requireNonNull(photo.getOriginalFilename()));
+        s3Client.putObject(PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(fileName)
+                        .contentType(contentType)           // 이미지 형식에 맞는 Content-Type 설정
+                        .contentDisposition("inline")       // 브라우저에서 직접 표시되도록 설정
+                        .build(),
+                software.amazon.awssdk.core.sync.RequestBody.fromBytes(photo.getBytes()));
+
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
     }
 
     private String determineContentType(String fileName) {

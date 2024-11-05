@@ -7,7 +7,7 @@ import java.util.List;
 public interface ChildrenService {
     List<ChildrenDTO> getAllChildren(Integer userId);
     ChildrenDTO getChildById(Integer childId);
-    void addChild(ChildrenDTO childrenDTO);
+    ChildrenDTO addChild(ChildrenDTO childrenDTO);
     void updateChild(ChildrenDTO childrenDTO);
     void deleteChild(Integer childId);
 }
