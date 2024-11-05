@@ -30,7 +30,7 @@ public class S3UploadServiceImpl implements S3UploadService {
         List<String> photoUrls = new ArrayList<>();
 
         for (MultipartFile photo : photos) {
-            String fileName = diaryId + "/" + UUID.randomUUID() + "_" + photo.getOriginalFilename();
+            String fileName = "record/" + diaryId + "/" + UUID.randomUUID() + "_" + photo.getOriginalFilename();
             String contentType = determineContentType(Objects.requireNonNull(photo.getOriginalFilename()));
             s3Client.putObject(PutObjectRequest.builder()
                             .bucket(bucketName)
