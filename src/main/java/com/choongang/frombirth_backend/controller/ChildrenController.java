@@ -2,6 +2,7 @@ package com.choongang.frombirth_backend.controller;
 
 import com.choongang.frombirth_backend.model.dto.ChildrenDTO;
 import com.choongang.frombirth_backend.service.ChildrenService;
+import com.choongang.frombirth_backend.service.S3UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "*") // 모든 출처 허용 (개발용)
 public class ChildrenController {
     private final ChildrenService childrenService;
+    private final S3UploadService s3UploadService;
 
     @Autowired
-    public ChildrenController(ChildrenService childrenService) {
+    public ChildrenController(ChildrenService childrenService, S3UploadService s3UploadService) {
         this.childrenService = childrenService;
+        this.s3UploadService = s3UploadService;
     }
 
     @GetMapping("/all/{userId}") // UserId에 대한 아이 목록
@@ -34,17 +37,24 @@ public class ChildrenController {
     }
 
     @PostMapping("/create") //아이 프로필 생성
-    public ResponseEntity<String> addChild(
+    public ResponseEntity<ChildrenDTO> addChild(
              @RequestPart ChildrenDTO childrenDTO
-           ,@RequestPart MultipartFile file) {
+           ,@RequestPart(value = "profile", required = false) MultipartFile profile) {
 
-        System.out.println(file.getOriginalFilename());
         System.out.println(childrenDTO);
 
-        childrenService.addChild(childrenDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+        try {
+            if(profile != null) {
+                String profileUrl = s3UploadService.uploadProfile(profile, childrenDTO.getUserId());
+                childrenDTO.setProfilePicture(profileUrl);
+            }
 
+            ChildrenDTO result = childrenService.addChild(childrenDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @PutMapping("/update") // 아이 프로필 업데이트
     public ResponseEntity<Void> updateChild(@RequestBody ChildrenDTO childrenDTO) {
