@@ -38,23 +38,24 @@ public class S3UploadServiceImpl implements S3UploadService {
     }
 
     @Override
-    public String uploadProfile(MultipartFile profile, Integer userId) throws IOException {
-        String rootPath = "children/" + userId;
+    public String uploadProfile(MultipartFile profile, Integer childId) throws IOException {
+        String rootPath = "children/" + childId;
         return doUpload(rootPath, profile);
     }
 
     private String doUpload(String rootPath, MultipartFile photo) throws IOException {
-        String fileName = rootPath + "/" + UUID.randomUUID() + "_" + photo.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
+        String path = rootPath + "/" + fileName;
         String contentType = determineContentType(Objects.requireNonNull(photo.getOriginalFilename()));
         s3Client.putObject(PutObjectRequest.builder()
                         .bucket(bucketName)
-                        .key(fileName)
+                        .key(path)
                         .contentType(contentType)           // 이미지 형식에 맞는 Content-Type 설정
                         .contentDisposition("inline")       // 브라우저에서 직접 표시되도록 설정
                         .build(),
                 software.amazon.awssdk.core.sync.RequestBody.fromBytes(photo.getBytes()));
 
-        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
+        return fileName;
     }
 
     private String determineContentType(String fileName) {
@@ -69,6 +70,8 @@ public class S3UploadServiceImpl implements S3UploadService {
         }
     }
 
-
-
+    @Override
+    public String modifyFilenameToUrl(String fileName) {
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
+    }
 }

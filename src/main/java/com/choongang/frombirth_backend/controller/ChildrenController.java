@@ -44,12 +44,7 @@ public class ChildrenController {
         System.out.println(childrenDTO);
 
         try {
-            if(profile != null) {
-                String profileUrl = s3UploadService.uploadProfile(profile, childrenDTO.getUserId());
-                childrenDTO.setProfilePicture(profileUrl);
-            }
-
-            ChildrenDTO result = childrenService.addChild(childrenDTO);
+            ChildrenDTO result = childrenService.addChild(childrenDTO, profile);
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

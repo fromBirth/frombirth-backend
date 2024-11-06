@@ -4,11 +4,15 @@ import com.choongang.frombirth_backend.model.dto.ChildrenDTO;
 import com.choongang.frombirth_backend.model.entity.Children;
 import com.choongang.frombirth_backend.repository.ChildrenRepository;
 import com.choongang.frombirth_backend.service.ChildrenService;
+import com.choongang.frombirth_backend.service.S3UploadService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,32 +21,49 @@ import java.util.stream.Collectors;
 public class ChildrenServiceImpl implements ChildrenService {
     private final ChildrenRepository childrenRepository;
     private final ModelMapper modelMapper;
+    private final S3UploadService s3UploadService;
 
     @Autowired
-    public ChildrenServiceImpl(ChildrenRepository childrenRepository, ModelMapper modelMapper) {
+    public ChildrenServiceImpl(ChildrenRepository childrenRepository, ModelMapper modelMapper, S3UploadService s3UploadService) {
         this.childrenRepository = childrenRepository;
         this.modelMapper = modelMapper;
+        this.s3UploadService = s3UploadService;
     }
 
     @Override
     public List<ChildrenDTO> getAllChildren(Integer userId) {
         return childrenRepository.findByUserId(userId).stream()
-                .map(child -> modelMapper.map(child, ChildrenDTO.class))
+                .map(child -> {
+                    String fileName = "children/" + child.getChildId() + "/" + child.getProfilePicture();
+                    child.setProfilePicture(s3UploadService.modifyFilenameToUrl(fileName));
+                    return modelMapper.map(child, ChildrenDTO.class);
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public ChildrenDTO getChildById(Integer childId) { // 아이 정보 가져오기
         Children child = childrenRepository.findById(childId).orElseThrow();
+        String fileName = "children/" + childId + "/" + child.getProfilePicture();
+        child.setProfilePicture(s3UploadService.modifyFilenameToUrl(fileName));
+
         return modelMapper.map(child, ChildrenDTO.class);
     }
 
     @Override
-    public ChildrenDTO addChild(ChildrenDTO childrenDTO) { // 프로필생성
+    @Transactional
+    public ChildrenDTO addChild(ChildrenDTO childrenDTO, MultipartFile profile) throws IOException {
+        // Children 엔티티를 먼저 저장하여 ID를 생성
         Children child = modelMapper.map(childrenDTO, Children.class);
-
-        // 프로필 생성 시간 설정
         child.setCreatedAt(LocalDateTime.now());
+        child = childrenRepository.save(child);
+
+        // S3에 프로필 업로드 및 URL 설정
+        if (profile != null && !profile.isEmpty()) {
+            String profileUrl = s3UploadService.uploadProfile(profile, child.getChildId());
+            child.setProfilePicture(profileUrl); // 프로필 URL을 엔티티에 설정
+        }
+
         return modelMapper.map(childrenRepository.save(child), ChildrenDTO.class);
     }
 
