@@ -1,5 +1,9 @@
 package com.choongang.frombirth_backend;
 
+import com.choongang.frombirth_backend.model.dto.ChildrenDTO;
+import com.choongang.frombirth_backend.model.dto.PhotoDTO;
+import com.choongang.frombirth_backend.service.ChildrenService;
+import com.choongang.frombirth_backend.service.PhotoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,11 +12,19 @@ import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 
+import java.util.List;
+
 @SpringBootTest
 public class S3Test {
 
     @Autowired
     S3Client s3Client;
+
+    @Autowired
+    PhotoService photoService;
+
+    @Autowired
+    ChildrenService childrenService;
 
     @Test
     public void test() {
@@ -40,6 +52,20 @@ public class S3Test {
 //        System.out.println("Content-Type and Content-Disposition updated for: " + key);
 //
 //        s3Client.close();
+    }
+
+    @Test
+    public void getObject() {
+        // PhotoDTO URL 확인
+        List<PhotoDTO> list = photoService.getAllPhotos(13);
+        System.out.println(list.toString());
+    }
+
+    @Test
+    public void getChildProfileUrl() {
+        // 아이 프로필 사진 url 확인
+        ChildrenDTO dto =  childrenService.getChildById(38);
+        System.out.println(dto);
     }
 
 }
