@@ -44,14 +44,10 @@ public class UserController {
         Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<ChildrenDTO> childList = childrenService.getAllChildren(userId);
-        System.out.println("user child list : " + childList);
-
         // 사용자 정보를 반환 (DTO로 변환하여 반환하는 것이 좋습니다)
         return ResponseEntity.ok(Map.of(
                 "userId", user.getUserId(),
-                "email", user.getEmail(),
-                "childList", childList
+                "email", user.getEmail()
         ));
     }
 }
