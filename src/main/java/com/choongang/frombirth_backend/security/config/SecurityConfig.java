@@ -21,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${frontEnd.url}")
     private String frontEndUrl;
+
+    @Value("${base.url}")
+    private String baseUrl;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
@@ -76,7 +80,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(frontEndUrl)); // 허용할 클라이언트 도메인
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        //configuration.setAllowedOrigins(Arrays.asList(frontEndUrl)); // 허용할 클라이언트 도메인
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true); // 쿠키 전송 허용
