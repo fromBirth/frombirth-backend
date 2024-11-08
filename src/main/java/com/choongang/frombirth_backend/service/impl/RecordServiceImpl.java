@@ -54,6 +54,7 @@ public class RecordServiceImpl implements RecordService {
     public void addRecord(RecordDTO recordDTO, MultipartFile[] images, MultipartFile video) throws IOException {
         Record record = modelMapper.map(recordDTO, Record.class);
         record.setCreatedAt(LocalDateTime.now()); // 레코드 생성 시간 설정
+        record.setChildId(recordDTO.getChildId());
 
         // Record 저장
         Record savedRecord = recordRepository.save(record);
