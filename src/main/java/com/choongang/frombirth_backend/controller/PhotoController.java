@@ -21,7 +21,7 @@ public class PhotoController {
 
     @GetMapping("/all/{recordId}")
     public ResponseEntity<List<PhotoDTO>> getAllPhotos(@PathVariable Integer recordId) {
-        return ResponseEntity.ok(photoService.getAllPhotos(recordId));
+        return ResponseEntity.ok(photoService.getAllPhotosByRecordId(recordId));
     }
 
     @GetMapping("/record/{photoId}")

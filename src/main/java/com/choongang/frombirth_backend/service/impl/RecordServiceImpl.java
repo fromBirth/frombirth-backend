@@ -2,12 +2,11 @@ package com.choongang.frombirth_backend.service.impl;
 
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
-import com.choongang.frombirth_backend.model.entity.Photo;
 import com.choongang.frombirth_backend.model.entity.Record;
 import com.choongang.frombirth_backend.repository.RecordRepository;
 import com.choongang.frombirth_backend.service.PhotoService;
 import com.choongang.frombirth_backend.service.RecordService;
-import com.choongang.frombirth_backend.service.S3UploadService;
+import com.choongang.frombirth_backend.service.S3Service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +23,14 @@ import java.util.stream.Collectors;
 public class RecordServiceImpl implements RecordService {
     private final RecordRepository recordRepository;
     private final PhotoService photoService;
-    private final S3UploadService s3UploadService;
+    private final S3Service s3Service;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public RecordServiceImpl(RecordRepository recordRepository, PhotoService photoService, S3UploadService s3UploadService, ModelMapper modelMapper) {
+    public RecordServiceImpl(RecordRepository recordRepository, PhotoService photoService, S3Service s3Service, ModelMapper modelMapper) {
         this.recordRepository = recordRepository;
         this.photoService = photoService;
-        this.s3UploadService = s3UploadService;
+        this.s3Service = s3Service;
         this.modelMapper = modelMapper;
     }
 
@@ -53,7 +52,6 @@ public class RecordServiceImpl implements RecordService {
     public void addRecord(RecordDTO recordDTO, MultipartFile[] images, MultipartFile video) throws IOException {
         Record record = modelMapper.map(recordDTO, Record.class);
         record.setCreatedAt(LocalDateTime.now()); // 레코드 생성 시간 설정
-        record.setChildId(46); // 임시데이터
 
         // Record 저장
         Record savedRecord = recordRepository.save(record);
@@ -62,7 +60,7 @@ public class RecordServiceImpl implements RecordService {
         // 이미지 업로드
         List<String> photoUrls = new ArrayList<>();
         if (images != null) {
-            photoUrls = s3UploadService.uploadPhotos(images, String.valueOf(record.getRecordId()));
+            photoUrls = s3Service.uploadPhotos(images, String.valueOf(record.getRecordId()));
         }
 
         // URL 저장
