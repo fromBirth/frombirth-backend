@@ -7,11 +7,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
+@EnableScheduling  // 스케줄러 기능 활성화
 public class FrombirthBackendApplication implements CommandLineRunner {
 
 	private static final Logger logger = LoggerFactory.getLogger(FrombirthBackendApplication.class);

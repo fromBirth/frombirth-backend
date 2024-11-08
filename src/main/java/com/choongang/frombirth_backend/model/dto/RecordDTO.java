@@ -1,15 +1,17 @@
 package com.choongang.frombirth_backend.model.dto;
 
+import java.util.List;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
 public class RecordDTO {
     private Integer recordId;
     private Integer childId;

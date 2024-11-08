@@ -1,7 +1,9 @@
 package com.choongang.frombirth_backend.controller;
 
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
+import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import com.choongang.frombirth_backend.service.RecordService;
+import com.choongang.frombirth_backend.util.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +32,11 @@ public class RecordController {
     @GetMapping("/child/{recordId}") // 아이의 기록 불러오기
     public ResponseEntity<RecordDTO> getRecordById(@PathVariable Integer recordId) {
         return ResponseEntity.ok(recordService.getRecordById(recordId));
+    }
+
+    @GetMapping("/all/{childId}/{month}")
+    public ResponseEntity<List<RecordPhotoDTO>> getAllRecordsByMonth(@PathVariable Integer childId, @PathVariable String month) {
+        return ResponseEntity.ok(recordService.getRecordByIdAndMonth(childId, month));
     }
 
     @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}) //아이 기록 생성
