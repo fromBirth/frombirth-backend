@@ -2,6 +2,7 @@ package com.choongang.frombirth_backend.service.impl;
 
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
+import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import com.choongang.frombirth_backend.model.entity.Photo;
 import com.choongang.frombirth_backend.model.entity.Record;
 import com.choongang.frombirth_backend.repository.RecordRepository;
@@ -108,5 +109,10 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public void deleteRecord(Integer recordId) {
         recordRepository.deleteById(recordId);
+    }
+
+    @Override
+    public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
+        return recordRepository.getRecordByIdAndMonth(childId, month);
     }
 }
