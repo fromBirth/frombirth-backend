@@ -50,8 +50,7 @@ public class UserController {
         // 사용자 정보를 반환 (DTO로 변환하여 반환하는 것이 좋습니다)
         return ResponseEntity.ok(Map.of(
                 "userId", user.getUserId(),
-                "email", user.getEmail(),
-                "childList", childList
+                "email", user.getEmail()
         ));
     }
 }

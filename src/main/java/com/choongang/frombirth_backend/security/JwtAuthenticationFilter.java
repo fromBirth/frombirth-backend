@@ -49,7 +49,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         String token = accessTokenFromCookie(request);
-        System.out.println(token);
+        System.out.println("auth filter token : " + token);
+
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Integer userId = jwtTokenProvider.getUserIdFromToken(token);
