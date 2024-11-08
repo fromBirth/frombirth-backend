@@ -1,11 +1,11 @@
 package com.choongang.frombirth_backend.service.impl;
 
-import com.choongang.frombirth_backend.service.S3UploadService;
+import com.choongang.frombirth_backend.service.S3Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class S3UploadServiceImpl implements S3UploadService {
+public class S3ServiceImpl implements S3Service {
 
     private final S3Client s3Client;
 
@@ -24,7 +24,7 @@ public class S3UploadServiceImpl implements S3UploadService {
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    public S3UploadServiceImpl(S3Client s3Client) { this.s3Client = s3Client; }
+    public S3ServiceImpl(S3Client s3Client) { this.s3Client = s3Client; }
 
     public List<String> uploadPhotos(MultipartFile[] photos, String diaryId) throws IOException {
         List<String> photoUrls = new ArrayList<>();
@@ -73,5 +73,30 @@ public class S3UploadServiceImpl implements S3UploadService {
     @Override
     public String modifyFilenameToUrl(String fileName) {
         return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, fileName);
+    }
+
+    @Override
+    public List<String> getFileNamesAll() {
+        List<String> s3Filenames = new ArrayList<>();
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                .bucket(bucketName)
+                .build();
+
+        ListObjectsV2Response response = s3Client.listObjectsV2(request);
+        for (S3Object s3Object : response.contents()) {
+            s3Filenames.add(s3Object.key());
+        }
+
+        return s3Filenames;
+    }
+
+    @Override
+    public void deleteFile(String fileName) {
+        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileName)
+                .build();
+        DeleteObjectResponse deleteResponse = s3Client.deleteObject(deleteRequest);
+        System.out.println(deleteResponse.toString());
     }
 }

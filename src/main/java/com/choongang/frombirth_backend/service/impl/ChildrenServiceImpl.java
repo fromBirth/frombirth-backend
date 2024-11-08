@@ -1,10 +1,11 @@
 package com.choongang.frombirth_backend.service.impl;
 
 import com.choongang.frombirth_backend.model.dto.ChildrenDTO;
+import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.entity.Children;
 import com.choongang.frombirth_backend.repository.ChildrenRepository;
 import com.choongang.frombirth_backend.service.ChildrenService;
-import com.choongang.frombirth_backend.service.S3UploadService;
+import com.choongang.frombirth_backend.service.S3Service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,23 +22,30 @@ import java.util.stream.Collectors;
 public class ChildrenServiceImpl implements ChildrenService {
     private final ChildrenRepository childrenRepository;
     private final ModelMapper modelMapper;
-    private final S3UploadService s3UploadService;
+    private final S3Service s3Service;
 
     @Autowired
-    public ChildrenServiceImpl(ChildrenRepository childrenRepository, ModelMapper modelMapper, S3UploadService s3UploadService) {
+    public ChildrenServiceImpl(ChildrenRepository childrenRepository, ModelMapper modelMapper, S3Service s3Service) {
         this.childrenRepository = childrenRepository;
         this.modelMapper = modelMapper;
-        this.s3UploadService = s3UploadService;
+        this.s3Service = s3Service;
     }
 
     @Override
-    public List<ChildrenDTO> getAllChildren(Integer userId) {
+    public List<ChildrenDTO> getAllChildrenByUserId(Integer userId) {
         return childrenRepository.findByUserId(userId).stream()
                 .map(child -> {
                     String fileName = "children/" + child.getChildId() + "/" + child.getProfilePicture();
-                    child.setProfilePicture(s3UploadService.modifyFilenameToUrl(fileName));
+                    child.setProfilePicture(s3Service.modifyFilenameToUrl(fileName));
                     return modelMapper.map(child, ChildrenDTO.class);
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ChildrenDTO> getAllChildren() {
+        return childrenRepository.findAll().stream()
+                .map(child -> modelMapper.map(child, ChildrenDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -45,7 +53,7 @@ public class ChildrenServiceImpl implements ChildrenService {
     public ChildrenDTO getChildById(Integer childId) { // 아이 정보 가져오기
         Children child = childrenRepository.findById(childId).orElseThrow();
         String fileName = "children/" + childId + "/" + child.getProfilePicture();
-        child.setProfilePicture(s3UploadService.modifyFilenameToUrl(fileName));
+        child.setProfilePicture(s3Service.modifyFilenameToUrl(fileName));
 
         return modelMapper.map(child, ChildrenDTO.class);
     }
@@ -60,7 +68,7 @@ public class ChildrenServiceImpl implements ChildrenService {
 
         // S3에 프로필 업로드 및 URL 설정
         if (profile != null && !profile.isEmpty()) {
-            String profileUrl = s3UploadService.uploadProfile(profile, child.getChildId());
+            String profileUrl = s3Service.uploadProfile(profile, child.getChildId());
             child.setProfilePicture(profileUrl); // 프로필 URL을 엔티티에 설정
         }
 

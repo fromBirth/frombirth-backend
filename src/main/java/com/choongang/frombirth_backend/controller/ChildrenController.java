@@ -2,13 +2,12 @@ package com.choongang.frombirth_backend.controller;
 
 import com.choongang.frombirth_backend.model.dto.ChildrenDTO;
 import com.choongang.frombirth_backend.service.ChildrenService;
-import com.choongang.frombirth_backend.service.S3UploadService;
+import com.choongang.frombirth_backend.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,17 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "*") // 모든 출처 허용 (개발용)
 public class ChildrenController {
     private final ChildrenService childrenService;
-    private final S3UploadService s3UploadService;
+    private final S3Service s3Service;
 
     @Autowired
-    public ChildrenController(ChildrenService childrenService, S3UploadService s3UploadService) {
+    public ChildrenController(ChildrenService childrenService, S3Service s3Service) {
         this.childrenService = childrenService;
-        this.s3UploadService = s3UploadService;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/all/{userId}") // UserId에 대한 아이 목록
     public ResponseEntity<List<ChildrenDTO>> getAllChildren(@PathVariable Integer userId) {
-        return ResponseEntity.ok(childrenService.getAllChildren(userId));
+        return ResponseEntity.ok(childrenService.getAllChildrenByUserId(userId));
     }
 
 

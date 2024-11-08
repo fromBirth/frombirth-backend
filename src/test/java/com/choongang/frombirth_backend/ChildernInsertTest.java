@@ -30,10 +30,9 @@ public class ChildernInsertTest {
 //                .build();
 //
 //        childrenService.addChild(children);
-
-        ChildrenDTO result = childrenService.getChildById(32);
-        System.out.println(result);
-
+//
+//        ChildrenDTO result = childrenService.getChildById(32);
+//        System.out.println(result);
 
     }
 }
