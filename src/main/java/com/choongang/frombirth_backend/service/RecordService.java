@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface RecordService {
-    List<RecordDTO> getAllRecords(Integer childId);
+    List<RecordDTO> getAllRecords(Integer childId, Integer lastRecordId, Integer size);
     RecordDTO getRecordById(Integer recordId);
     void addRecord(RecordDTO recordDTO, MultipartFile[] images, MultipartFile video) throws IOException;
     void updateRecord(RecordDTO recordDTO);

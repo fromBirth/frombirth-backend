@@ -1,17 +1,18 @@
 package com.choongang.frombirth_backend.model.dto;
 
+import com.choongang.frombirth_backend.model.entity.Record;
 import java.util.List;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RecordDTO {
     private Integer recordId;
     private Integer childId;
@@ -23,4 +24,8 @@ public class RecordDTO {
     private Integer videoResult;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private List<PhotoDTO> images;
+
+//    public RecordDTO(Record record) {
+//    }
 }

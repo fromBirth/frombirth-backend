@@ -1,6 +1,8 @@
 package com.choongang.frombirth_backend.repository;
 
 import com.choongang.frombirth_backend.model.entity.Record;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

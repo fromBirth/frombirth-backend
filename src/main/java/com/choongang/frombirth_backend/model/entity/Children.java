@@ -55,7 +55,7 @@ public class Children {
     @Column(name = "birth_height")
     private Integer birthHeight; // 출생 키
 
-    @OneToMany(mappedBy = "children", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Record> records = new ArrayList<>();
+//    @OneToMany(mappedBy = "children", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Record> records = new ArrayList<>();
 
 }

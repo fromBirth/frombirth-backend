@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "record")
+@Table(name = "record", indexes = @Index(name = "idx_record", columnList = "child_id, record_date", unique = true))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
