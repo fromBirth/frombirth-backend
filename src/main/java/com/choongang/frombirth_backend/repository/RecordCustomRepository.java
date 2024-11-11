@@ -8,5 +8,5 @@ import org.springframework.data.domain.Slice;
 
 public interface RecordCustomRepository {
     List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month);
-    Slice<RecordDTO> getRecordPage (Integer childId, Integer recordId, PageRequest pageRequest);
+    Slice<RecordDTO> getRecordPage (Integer childId, Integer recordId, PageRequest pageRequest, String query);
 }

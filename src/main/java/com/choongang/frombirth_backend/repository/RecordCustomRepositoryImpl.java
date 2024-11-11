@@ -59,7 +59,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
     }
 
     @Override
-    public Slice<RecordDTO> getRecordPage(Integer childId, Integer recordId, PageRequest pageRequest) {
+    public Slice<RecordDTO> getRecordPage(Integer childId, Integer recordId, PageRequest pageRequest, String query) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
 
@@ -82,6 +82,14 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(record.childId.eq(childId));
         builder.and(record.recordDate.before(recordDate));
+
+        System.out.println(query);
+        if (query != null) {
+            BooleanBuilder orCondition = new BooleanBuilder();
+            orCondition.or(record.title.like("%" + query + "%"));
+            orCondition.or(record.content.like("%" + query + "%"));
+            builder.and(orCondition);
+        }
 
         List<RecordDTO> records = new JPAQueryFactory(entityManager)
                 .from(record)
@@ -117,30 +125,6 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
                                 )
                         )
                 );
-
-//        List<RecordDTO> records = jpaQueryFactory.select(
-//                        constructor(
-//                                RecordDTO.class,
-//                                record.recordId,
-//                                record.childId,
-//                                record.recordDate,
-//                                record.height,
-//                                record.weight,
-//                                record.title,
-//                                record.content,
-//                                record.videoResult,
-//                                record.createdAt,
-//                                record.updatedAt
-//                        )
-//                )
-//                .from(record)
-//                .leftJoin(photo)
-//                .on(record.recordId.eq(photo.recordId))
-//                .where(builder)
-//                .orderBy(record.recordDate.desc())
-//                .offset(pageRequest.getOffset())
-//                .limit(pageRequest.getPageSize() + 1)
-//                .fetch();
 
         boolean hasNextPage = records.size() > pageRequest.getPageSize();
         if (hasNextPage) {

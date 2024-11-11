@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -38,14 +37,14 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<RecordDTO> getAllRecords(Integer childId, Integer lastRecordId, Integer size) {
+    public List<RecordDTO> getAllRecords(Integer childId, Integer lastRecordId, Integer size, String query) {
         PageRequest pageRequest = PageRequest.of(0, size);
 
         System.out.println(childId);
         System.out.println(lastRecordId);
 
         Slice<RecordDTO> recordPage = recordRepository.getRecordPage(
-                childId, lastRecordId, pageRequest);
+                childId, lastRecordId, pageRequest, query);
 
         System.out.println(recordPage);
 
