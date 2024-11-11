@@ -4,6 +4,7 @@ import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.util.PageVO;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,9 +25,12 @@ public class RecordController {
         this.recordService = recordService;
     }
 
-    @GetMapping("/all/{childId}") // 아이의 전체 기록 불러오기
-    public ResponseEntity<List<RecordDTO>> getAllRecords(@PathVariable Integer childId) {
-        return ResponseEntity.ok(recordService.getAllRecords(childId));
+    @GetMapping("/all/{childId}/{lastRecordId}/{size}") // 아이의 전체 기록 불러오기
+    public ResponseEntity<List<RecordDTO>> getAllRecords(@PathVariable Integer childId,
+                                                         @PathVariable Integer lastRecordId,
+                                                         @PathVariable Integer size) {
+        System.out.println("get All diary start");
+        return ResponseEntity.ok(recordService.getAllRecords(childId, lastRecordId, size));
     }
 
     @GetMapping("/child/{recordId}") // 아이의 기록 불러오기

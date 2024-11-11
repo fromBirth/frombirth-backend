@@ -3,7 +3,6 @@ package com.choongang.frombirth_backend.service.impl;
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
-import com.choongang.frombirth_backend.model.entity.Photo;
 import com.choongang.frombirth_backend.model.entity.Record;
 import com.choongang.frombirth_backend.repository.RecordRepository;
 import com.choongang.frombirth_backend.service.PhotoService;
@@ -11,6 +10,8 @@ import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.service.S3Service;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,10 +38,18 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<RecordDTO> getAllRecords(Integer childId) {
-        return recordRepository.findByChildId(childId).stream()
-                .map(record -> modelMapper.map(record, RecordDTO.class))
-                .collect(Collectors.toList());
+    public List<RecordDTO> getAllRecords(Integer childId, Integer lastRecordId, Integer size) {
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        System.out.println(childId);
+        System.out.println(lastRecordId);
+
+        Slice<RecordDTO> recordPage = recordRepository.getRecordPage(
+                childId, lastRecordId, pageRequest);
+
+        System.out.println(recordPage);
+
+        return recordPage.getContent();
     }
 
     @Override
