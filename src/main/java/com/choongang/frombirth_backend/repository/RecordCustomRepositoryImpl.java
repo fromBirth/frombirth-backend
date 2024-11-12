@@ -1,9 +1,12 @@
 package com.choongang.frombirth_backend.repository;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.core.types.Projections.*;
+import static com.querydsl.core.types.dsl.Expressions.*;
 import static com.querydsl.core.types.dsl.Expressions.numberTemplate;
 
+import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
@@ -59,7 +62,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
     }
 
     @Override
-    public Slice<RecordDTO> getRecordPage(Integer childId, Integer recordId, PageRequest pageRequest) {
+    public Slice<RecordDTO> getRecordPage(Integer childId, Integer recordId, PageRequest pageRequest, String query) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
 
@@ -82,6 +85,14 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(record.childId.eq(childId));
         builder.and(record.recordDate.before(recordDate));
+
+        System.out.println(query);
+        if (query != null) {
+            BooleanBuilder orCondition = new BooleanBuilder();
+            orCondition.or(record.title.like("%" + query + "%"));
+            orCondition.or(record.content.like("%" + query + "%"));
+            builder.and(orCondition);
+        }
 
         List<RecordDTO> records = new JPAQueryFactory(entityManager)
                 .from(record)
@@ -106,7 +117,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
                                         record.createdAt,
                                         record.updatedAt,
                                         list(
-                                                Projections.fields(
+                                                Projections.constructor(
                                                         PhotoDTO.class,
                                                         photo.photoId,
                                                         photo.recordId,
@@ -118,35 +129,69 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
                         )
                 );
 
-//        List<RecordDTO> records = jpaQueryFactory.select(
-//                        constructor(
-//                                RecordDTO.class,
-//                                record.recordId,
-//                                record.childId,
-//                                record.recordDate,
-//                                record.height,
-//                                record.weight,
-//                                record.title,
-//                                record.content,
-//                                record.videoResult,
-//                                record.createdAt,
-//                                record.updatedAt
-//                        )
-//                )
-//                .from(record)
-//                .leftJoin(photo)
-//                .on(record.recordId.eq(photo.recordId))
-//                .where(builder)
-//                .orderBy(record.recordDate.desc())
-//                .offset(pageRequest.getOffset())
-//                .limit(pageRequest.getPageSize() + 1)
-//                .fetch();
-
         boolean hasNextPage = records.size() > pageRequest.getPageSize();
         if (hasNextPage) {
             records.remove(records.size() - 1);
         }
 
         return new SliceImpl<>(records, pageRequest, hasNextPage);
+    }
+
+    @Override
+    public Slice<MonthRecordPhotoDTO> getRecordPhotoByMonth(Integer childId, LocalDate lastMonth,
+                                                            PageRequest pageRequest, String query) {
+        QRecord record = QRecord.record;
+        QPhoto photo = QPhoto.photo;
+
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(record.childId.eq(childId));
+        builder.and(record.recordDate.before(lastMonth));
+
+        if (query != null) {
+            BooleanBuilder orCondition = new BooleanBuilder();
+            orCondition.or(record.title.like("%" + query + "%"));
+            orCondition.or(record.content.like("%" + query + "%"));
+            builder.and(orCondition);
+        }
+
+        List<MonthRecordPhotoDTO> list = jpaQueryFactory
+                .from(photo)
+                .join(record)
+                .on(record.recordId.eq(photo.recordId))
+                .where(builder)
+                .orderBy(record.recordDate.desc())  // recordDate 기준 내림차순 정렬
+                .transform(
+                        groupBy(stringTemplate("YEAR({0}) || '-' || MONTH({0})", record.recordDate))
+                                .list(
+                                        Projections.constructor(
+                                                MonthRecordPhotoDTO.class,
+                                                stringTemplate("YEAR({0}) || '-' || MONTH({0})", record.recordDate).as("month"),
+                                                list(
+                                                        Projections.constructor(
+                                                                PhotoDTO.class,
+                                                                photo.photoId,
+                                                                photo.recordId,
+                                                                photo.url,
+                                                                photo.createdAt
+                                                        )
+                                                )
+                                        )
+                                )
+                );
+
+// 최종적으로 offset과 limit은 transform 이후에 적용
+        int offset = (int) pageRequest.getOffset();
+        int pageSize = pageRequest.getPageSize();
+        if (list.size() > pageSize) {
+            list = list.subList(offset, offset + pageSize);
+        }
+
+
+        boolean hasNext = list.size() > pageRequest.getPageSize();
+        if (hasNext) {
+            list.remove(list.size() - 1);
+        }
+
+        return new SliceImpl<>(list, pageRequest, hasNext);
     }
 }

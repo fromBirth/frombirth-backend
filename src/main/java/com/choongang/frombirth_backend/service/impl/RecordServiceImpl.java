@@ -1,5 +1,6 @@
 package com.choongang.frombirth_backend.service.impl;
 
+import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
@@ -8,6 +9,10 @@ import com.choongang.frombirth_backend.repository.RecordRepository;
 import com.choongang.frombirth_backend.service.PhotoService;
 import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.service.S3Service;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +25,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -38,14 +42,14 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<RecordDTO> getAllRecords(Integer childId, Integer lastRecordId, Integer size) {
+    public List<RecordDTO> getAllRecords(Integer childId, Integer lastRecordId, Integer size, String query) {
         PageRequest pageRequest = PageRequest.of(0, size);
 
         System.out.println(childId);
         System.out.println(lastRecordId);
 
         Slice<RecordDTO> recordPage = recordRepository.getRecordPage(
-                childId, lastRecordId, pageRequest);
+                childId, lastRecordId, pageRequest, query);
 
         System.out.println(recordPage);
 
@@ -123,5 +127,17 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
         return recordRepository.getRecordByIdAndMonth(childId, month);
+    }
+
+    @Override
+    public List<MonthRecordPhotoDTO> getAllRecordPhoto(Integer childId, String lastMonth, Integer size, String query) {
+        PageRequest pageRequest = PageRequest.of(0, size);
+
+        // YearMonth로 변환 후 LocalDate의 첫날로 변환
+        YearMonth yearMonth = YearMonth.parse(lastMonth, DateTimeFormatter.ofPattern("yyyy-MM"));
+        LocalDate localDate = yearMonth.atDay(1); // 해당 월의 첫날로 변환
+
+        Slice<MonthRecordPhotoDTO> page = recordRepository.getRecordPhotoByMonth(childId, localDate, pageRequest, query);
+        return page.getContent();
     }
 }
