@@ -14,8 +14,10 @@ public interface RecordService {
     void addRecord(RecordDTO recordDTO, MultipartFile[] images, MultipartFile video) throws IOException;
     void updateRecord(RecordDTO recordDTO);
     void deleteRecord(Integer recordId);
-
     List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month);
 
-    List<MonthRecordPhotoDTO> getAllRecordPhoto(Integer childId, String lastMonth, Integer size, String query);
+    List<MonthRecordPhotoDTO> getAllRecordPhoto(Integer childId, String lastMonth, Integer size, String query
+                                                
+    // 날짜와 childId로 특정 날짜의 기록 조회
+    RecordDTO getRecordByDate(Integer childId, String date);
 }

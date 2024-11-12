@@ -204,3 +204,7 @@ gradle-app.setting
 
 # .env 파일 무시
 .env
+
+# IntelliJ IDEA 설정 파일들
+*.xml
+.idea/

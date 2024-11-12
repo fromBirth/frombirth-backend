@@ -128,7 +128,7 @@ public class RecordServiceImpl implements RecordService {
     public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
         return recordRepository.getRecordByIdAndMonth(childId, month);
     }
-
+  
     @Override
     public List<MonthRecordPhotoDTO> getAllRecordPhoto(Integer childId, String lastMonth, Integer size, String query) {
         PageRequest pageRequest = PageRequest.of(0, size);
@@ -139,5 +139,11 @@ public class RecordServiceImpl implements RecordService {
 
         Slice<MonthRecordPhotoDTO> page = recordRepository.getRecordPhotoByMonth(childId, localDate, pageRequest, query);
         return page.getContent();
+    }
+
+    @Override
+    public RecordDTO getRecordByDate(Integer childId, String date) {
+        // 날짜와 childId로 데이터를 조회하는 로직을 작성
+        return recordRepository.findByChildIdAndDate(childId, date);
     }
 }
