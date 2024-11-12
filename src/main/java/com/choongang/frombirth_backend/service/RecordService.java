@@ -1,5 +1,6 @@
 package com.choongang.frombirth_backend.service;
 
+import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,4 +16,6 @@ public interface RecordService {
     void deleteRecord(Integer recordId);
 
     List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month);
+
+    List<MonthRecordPhotoDTO> getAllRecordPhoto(Integer childId, String lastMonth, Integer size, String query);
 }
