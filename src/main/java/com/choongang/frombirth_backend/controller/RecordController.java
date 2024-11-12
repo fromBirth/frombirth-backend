@@ -33,17 +33,32 @@ public class RecordController {
         return ResponseEntity.ok(recordService.getAllRecords(childId, lastRecordId, size));
     }
 
-    @GetMapping("/child/{recordId}") // 아이의 기록 불러오기
+    @GetMapping("/child/{recordId}") // 특정 기록 ID로 아이의 기록 불러오기
     public ResponseEntity<RecordDTO> getRecordById(@PathVariable Integer recordId) {
         return ResponseEntity.ok(recordService.getRecordById(recordId));
     }
 
-    @GetMapping("/all/{childId}/{month}")
+    @GetMapping("/all/{childId}/{month}") // 월별 기록 불러오기
     public ResponseEntity<List<RecordPhotoDTO>> getAllRecordsByMonth(@PathVariable Integer childId, @PathVariable String month) {
         return ResponseEntity.ok(recordService.getRecordByIdAndMonth(childId, month));
     }
 
-    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}) //아이 기록 생성
+    // 날짜별로 특정 아이의 기록 불러오기
+    @GetMapping("/child/{childId}/date/{date}")
+    public ResponseEntity<RecordDTO> getRecordByDate(@PathVariable Integer childId, @PathVariable String date) {
+        try {
+            RecordDTO recordDTO = recordService.getRecordByDate(childId, date);
+            if (recordDTO != null) {
+                return ResponseEntity.ok(recordDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping(value = "/create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}) // 아이 기록 생성
     public ResponseEntity<Void> addRecord(@RequestPart RecordDTO recordDTO,
                                           @RequestPart(value = "images", required = false) MultipartFile[] images,
                                           @RequestPart(value = "video", required = false) MultipartFile video) {
@@ -51,7 +66,6 @@ public class RecordController {
         System.out.println(recordDTO.toString());
 
         try {
-            // RecordDTO와 파일을 서비스로 전달
             recordService.addRecord(recordDTO, images, video);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {

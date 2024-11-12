@@ -124,4 +124,10 @@ public class RecordServiceImpl implements RecordService {
     public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
         return recordRepository.getRecordByIdAndMonth(childId, month);
     }
+
+    @Override
+    public RecordDTO getRecordByDate(Integer childId, String date) {
+        // 날짜와 childId로 데이터를 조회하는 로직을 작성
+        return recordRepository.findByChildIdAndDate(childId, date);
+    }
 }

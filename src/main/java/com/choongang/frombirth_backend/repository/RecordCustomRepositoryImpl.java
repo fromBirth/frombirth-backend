@@ -149,4 +149,44 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
 
         return new SliceImpl<>(records, pageRequest, hasNextPage);
     }
+
+    @Override
+    public RecordDTO findByChildIdAndDate(Integer childId, String date) {
+        QRecord record = QRecord.record;
+        QPhoto photo = QPhoto.photo;
+
+        // date를 LocalDate로 변환
+        LocalDate targetDate = LocalDate.parse(date);
+
+        return jpaQueryFactory.select(
+                        Projections.constructor(
+                                RecordDTO.class,
+                                record.recordId,
+                                record.childId,
+                                record.recordDate,
+                                record.height,
+                                record.weight,
+                                record.title,
+                                record.content,
+                                record.videoResult,
+                                record.createdAt,
+                                record.updatedAt,
+                                list(
+                                        Projections.fields(
+                                                PhotoDTO.class,
+                                                photo.photoId,
+                                                photo.recordId,
+                                                photo.url,
+                                                photo.createdAt
+                                        )
+                                )
+                        )
+                )
+                .from(record)
+                .leftJoin(photo)
+                .on(record.recordId.eq(photo.recordId))
+                .where(record.childId.eq(childId).and(record.recordDate.eq(targetDate))) // childId와 date 조건 추가
+                .fetchOne(); // 단일 결과 반환
+    }
+
 }
