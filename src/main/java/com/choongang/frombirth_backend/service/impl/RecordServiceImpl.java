@@ -16,6 +16,7 @@ import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -39,6 +42,13 @@ public class RecordServiceImpl implements RecordService {
         this.photoService = photoService;
         this.s3Service = s3Service;
         this.modelMapper = modelMapper;
+    }
+
+    @Override
+    public List<RecordDTO> getAllRecords1(Integer childId) {
+        return recordRepository.findByChildId(childId).stream()
+                .map(record -> modelMapper.map(record, RecordDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -128,7 +138,7 @@ public class RecordServiceImpl implements RecordService {
     public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
         return recordRepository.getRecordByIdAndMonth(childId, month);
     }
-  
+
     @Override
     public List<MonthRecordPhotoDTO> getAllRecordPhoto(Integer childId, String lastMonth, Integer size, String query) {
         PageRequest pageRequest = PageRequest.of(0, size);
@@ -145,5 +155,33 @@ public class RecordServiceImpl implements RecordService {
     public RecordDTO getRecordByDate(Integer childId, String date) {
         // 날짜와 childId로 데이터를 조회하는 로직을 작성
         return recordRepository.findByChildIdAndDate(childId, date);
+    }
+
+    @Override
+    public List<RecordDTO> getRecordsByChildIdWithNonNullHeight(Integer childId, Integer limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Record> records = recordRepository.findByChildIdAndHeightIsNotNullOrderByRecordDateDesc(childId, pageable);
+
+        // records를 역순으로 정렬
+        Collections.reverse(records);
+
+        // Record를 RecordDTO로 변환하여 반환
+        return records.stream()
+                .map(record -> modelMapper.map(record, RecordDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RecordDTO> getRecordsByChildIdAndWeightIsNotNullOrderByRecordDateDesc(Integer childId, Integer limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        List<Record> records = recordRepository.findByChildIdAndWeightIsNotNullOrderByRecordDateDesc(childId, pageable);
+
+        // records를 역순으로 정렬
+        Collections.reverse(records);
+
+        // Record를 RecordDTO로 변환하여 반환
+        return records.stream()
+                .map(record -> modelMapper.map(record, RecordDTO.class))
+                .collect(Collectors.toList());
     }
 }

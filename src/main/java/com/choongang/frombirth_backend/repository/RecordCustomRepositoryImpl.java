@@ -16,10 +16,13 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -137,46 +140,71 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
         return new SliceImpl<>(records, pageRequest, hasNextPage);
     }
 
+
     @Override
     public RecordDTO findByChildIdAndDate(Integer childId, String date) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
 
-        // date를 LocalDate로 변환
-        LocalDate targetDate = LocalDate.parse(date);
+        System.out.println("🔵 findByChildIdAndDate 호출됨 - childId: " + childId + ", date: " + date);
 
-        return jpaQueryFactory.select(
-                        Projections.constructor(
-                                RecordDTO.class,
-                                record.recordId,
-                                record.childId,
-                                record.recordDate,
-                                record.height,
-                                record.weight,
-                                record.title,
-                                record.content,
-                                record.videoResult,
-                                record.createdAt,
-                                record.updatedAt,
-                                list(
-                                        Projections.fields(
-                                                PhotoDTO.class,
-                                                photo.photoId,
-                                                photo.recordId,
-                                                photo.url,
-                                                photo.createdAt
+        LocalDate targetDate = null;
+        try {
+            targetDate = LocalDate.parse(date);
+            System.out.println("✅ 날짜 변환 성공 - targetDate: " + targetDate);
+        } catch (Exception e) {
+            System.out.println("❌ 날짜 변환 오류 - date: " + date);
+            e.printStackTrace();
+            return null;
+        }
+
+        System.out.println("🟡 쿼리 빌드 시작 - childId: " + childId + ", targetDate: " + targetDate);
+
+        // GroupBy를 사용하여 Record와 관련된 Photo를 함께 가져오기
+        Map<Integer, RecordDTO> records = jpaQueryFactory
+                .from(record)
+                .leftJoin(photo).on(record.recordId.eq(photo.recordId))
+                .where(record.childId.eq(childId).and(record.recordDate.eq(targetDate)))
+                .transform(
+                        groupBy(record.recordId).as(
+                                Projections.constructor(
+                                        RecordDTO.class,
+                                        record.recordId,
+                                        record.childId,
+                                        record.recordDate,
+                                        record.height,
+                                        record.weight,
+                                        record.title,
+                                        record.content,
+                                        record.videoResult,
+                                        record.createdAt,
+                                        record.updatedAt,
+                                        list(
+                                                Projections.fields(
+                                                        PhotoDTO.class,
+                                                        photo.photoId,
+                                                        photo.recordId,
+                                                        photo.url,
+                                                        photo.createdAt
+                                                )
                                         )
                                 )
                         )
-                )
-                .from(record)
-                .leftJoin(photo)
-                .on(record.recordId.eq(photo.recordId))
-                .where(record.childId.eq(childId).and(record.recordDate.eq(targetDate))) // childId와 date 조건 추가
-                .fetchOne(); // 단일 결과 반환
+                );
+
+        if (records.isEmpty()) {
+            System.out.println("⚠️ 쿼리 결과 없음 - childId: " + childId + ", date: " + targetDate);
+            return null;
+        }
+
+        // 첫 번째 RecordDTO 반환
+        RecordDTO result = records.values().iterator().next();
+        System.out.println("🟢 최종 RecordDTO 반환: " + result);
+        return result;
     }
 
-    @Override  
+
+    @Override
     public Slice<MonthRecordPhotoDTO> getRecordPhotoByMonth(Integer childId, LocalDate lastMonth,
                                                             PageRequest pageRequest, String query) {
         QRecord record = QRecord.record;
@@ -224,7 +252,6 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
         if (list.size() > pageSize) {
             list = list.subList(offset, offset + pageSize);
         }
-
 
         boolean hasNext = list.size() > pageRequest.getPageSize();
         if (hasNext) {
