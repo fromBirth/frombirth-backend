@@ -171,6 +171,16 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public List<PhotoDTO> getRandomPhoto(Integer childId) {
+        return recordRepository.getRandomPhotoList(childId).stream()
+                .peek(photo -> {
+                    String fileName = getRecordFileName(photo.getRecordId(), photo.getUrl());
+                    photo.setUrl(s3Service.modifyFilenameToUrl(fileName));
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<RecordDTO> getRecordsByChildIdWithNonNullHeight(Integer childId, Integer limit) {
         Pageable pageable = PageRequest.of(0, limit);
         List<Record> records = recordRepository.findByChildIdAndHeightIsNotNullOrderByRecordDateDesc(childId, pageable);

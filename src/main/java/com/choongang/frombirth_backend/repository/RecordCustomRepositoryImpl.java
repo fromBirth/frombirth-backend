@@ -10,11 +10,13 @@ import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
+import com.choongang.frombirth_backend.model.entity.Photo;
 import com.choongang.frombirth_backend.model.entity.QPhoto;
 import com.choongang.frombirth_backend.model.entity.QRecord;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.time.LocalDate;
@@ -202,6 +204,30 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
         RecordDTO result = records.values().iterator().next();
         System.out.println("🟢 최종 RecordDTO 반환: " + result);
         return result;
+    }
+
+    @Override
+    public List<PhotoDTO> getRandomPhotoList(Integer childId) {
+        QRecord record = QRecord.record;
+        QPhoto photo = QPhoto.photo;
+
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                PhotoDTO.class,
+                                photo.photoId,
+                                photo.recordId,
+                                photo.url,
+                                photo.createdAt
+                        )
+                )
+                .from(photo)
+                .join(record)
+                .on(record.recordId.eq(photo.recordId))
+                .where(record.childId.eq(childId))
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+                .limit(5)
+                .fetch();
     }
 
 

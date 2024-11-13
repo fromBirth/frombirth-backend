@@ -1,6 +1,7 @@
 package com.choongang.frombirth_backend.controller;
 
 import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
+import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import com.choongang.frombirth_backend.service.RecordService;
@@ -64,6 +65,11 @@ public class RecordController {
     @GetMapping("/all/{childId}/{month}") // 월별 기록 불러오기
     public ResponseEntity<List<RecordPhotoDTO>> getAllRecordsByMonth(@PathVariable Integer childId, @PathVariable String month) {
         return ResponseEntity.ok(recordService.getRecordByIdAndMonth(childId, month));
+    }
+
+    @GetMapping("/randomPhoto/{childId}")
+    public ResponseEntity<List<PhotoDTO>> getRandomPhoto(@PathVariable Integer childId) {
+        return ResponseEntity.ok(recordService.getRandomPhoto(childId));
     }
 
     // 날짜별로 특정 아이의 기록 불러오기
