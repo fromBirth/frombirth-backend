@@ -208,3 +208,4 @@ gradle-app.setting
 # IntelliJ IDEA 설정 파일들
 *.xml
 .idea/
+application.properties

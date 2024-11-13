@@ -24,7 +24,7 @@ public class WeeklyReportController {
         return ResponseEntity.ok(weeklyReportService.getAllReports(childId));
     }
 
-    @GetMapping("report/{reportId}")
+    @GetMapping("/report/{reportId}")
     public ResponseEntity<WeeklyReportDTO> getReportById(@PathVariable Integer reportId) {
         return ResponseEntity.ok(weeklyReportService.getReportById(reportId));
     }
@@ -41,5 +41,16 @@ public class WeeklyReportController {
         return ResponseEntity.noContent().build();
     }
 
+    // PUT 메서드 추가: 보고서의 'read' 값을 업데이트하는 메서드
+    @PutMapping("/update/{reportId}")
+    public ResponseEntity<Void> updateReportReadStatus(@PathVariable Integer reportId, @RequestBody WeeklyReportDTO weeklyReportDTO) {
+        // 'read' 상태를 업데이트하는 서비스 메서드를 호출
+        boolean updated = weeklyReportService.updateReportReadStatus(reportId, weeklyReportDTO.isRead());
 
+        if (updated) {
+            return ResponseEntity.ok().build();  // 성공적으로 업데이트한 경우
+        } else {
+            return ResponseEntity.status(400).build();  // 업데이트 실패한 경우
+        }
+    }
 }
