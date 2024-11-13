@@ -156,7 +156,12 @@ public class RecordServiceImpl implements RecordService {
         LocalDate localDate = yearMonth.atDay(1); // 해당 월의 첫날로 변환
 
         Slice<MonthRecordPhotoDTO> page = recordRepository.getRecordPhotoByMonth(childId, localDate, pageRequest, query);
-        return page.getContent();
+        return page.getContent().stream()
+                .peek(recordDTO -> recordDTO.getPhotos().forEach(photo -> {
+                    String fileName = getRecordFileName(photo.getRecordId(), photo.getUrl());
+                    photo.setUrl(s3Service.modifyFilenameToUrl(fileName));
+                }))
+                .collect(Collectors.toList());
     }
 
     @Override
