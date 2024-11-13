@@ -1,5 +1,8 @@
 package com.choongang.frombirth_backend.service.impl;
 
+import static com.choongang.frombirth_backend.service.impl.PhotoServiceImpl.*;
+import static com.choongang.frombirth_backend.util.Util.getRecordFileName;
+
 import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
@@ -45,7 +48,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<RecordDTO> getAllRecords1(Integer childId) {
+    public List<RecordDTO> getAllRecords(Integer childId) {
         return recordRepository.findByChildId(childId).stream()
                 .map(record -> modelMapper.map(record, RecordDTO.class))
                 .collect(Collectors.toList());
@@ -63,7 +66,12 @@ public class RecordServiceImpl implements RecordService {
 
         System.out.println(recordPage);
 
-        return recordPage.getContent();
+        return recordPage.getContent().stream()
+                .peek(recordDTO -> recordDTO.getImages().forEach(photo -> {
+                    String fileName = getRecordFileName(photo.getRecordId(), photo.getUrl());
+                    photo.setUrl(s3Service.modifyFilenameToUrl(fileName));
+                }))
+                .collect(Collectors.toList());
     }
 
     @Override

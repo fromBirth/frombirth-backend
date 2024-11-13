@@ -137,6 +137,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
             records.remove(records.size() - 1);
         }
 
+
         return new SliceImpl<>(records, pageRequest, hasNextPage);
     }
 
