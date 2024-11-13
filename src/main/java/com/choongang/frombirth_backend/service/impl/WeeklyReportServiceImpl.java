@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,4 +48,22 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
     public void deleteReport(Integer reportId) {
         weeklyReportRepository.deleteById(reportId);
     }
+
+    // 'read' 상태 업데이트 메서드
+    @Override
+    public boolean updateReportReadStatus(Integer reportId, boolean isRead) {
+        // 보고서를 조회
+        WeeklyReport report = weeklyReportRepository.findById(reportId)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
+
+        // 'isRead' 값을 true로 업데이트
+        report.setRead(true);  // 'isRead' 필드 업데이트
+
+        // 업데이트된 보고서를 저장
+        weeklyReportRepository.save(report);
+
+        // 업데이트 성공
+        return true;
+    }
 }
+
