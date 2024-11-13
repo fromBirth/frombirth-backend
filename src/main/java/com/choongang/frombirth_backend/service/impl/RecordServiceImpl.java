@@ -12,9 +12,11 @@ import com.choongang.frombirth_backend.repository.RecordRepository;
 import com.choongang.frombirth_backend.service.PhotoService;
 import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.service.S3Service;
+
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+
 import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,15 +138,9 @@ public class RecordServiceImpl implements RecordService {
         recordRepository.save(existingRecord);
     }
 
-
     @Override
     public void deleteRecord(Integer recordId) {
         recordRepository.deleteById(recordId);
-    }
-
-    @Override
-    public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
-        return recordRepository.getRecordByIdAndMonth(childId, month);
     }
 
     @Override
@@ -164,10 +160,36 @@ public class RecordServiceImpl implements RecordService {
                 .collect(Collectors.toList());
     }
 
+    // 🔴 childId와 month로 데이터 조회
+    @Override
+    public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
+        List<RecordPhotoDTO> recordPhotos = recordRepository.getRecordByIdAndMonth(childId, month);
+
+        // 조회된 데이터의 파일명을 변환
+        if (recordPhotos != null) {
+            recordPhotos.forEach(photo -> {
+                String fileName = getRecordFileName(photo.getRecordId(), photo.getPhotoUrl());
+                photo.setPhotoUrl(s3Service.modifyFilenameToUrl(fileName));
+            });
+        }
+
+        return recordPhotos;
+    }
+
+    // 🔴 날짜와 childId로 데이터 조회
     @Override
     public RecordDTO getRecordByDate(Integer childId, String date) {
-        // 날짜와 childId로 데이터를 조회하는 로직을 작성
-        return recordRepository.findByChildIdAndDate(childId, date);
+        RecordDTO recordDTO = recordRepository.findByChildIdAndDate(childId, date);
+
+        // recordDTO의 이미지 리스트에서 파일명을 변경
+        if (recordDTO != null && recordDTO.getImages() != null) {
+            recordDTO.getImages().forEach(photo -> {
+                String fileName = getRecordFileName(photo.getRecordId(), photo.getUrl());
+                photo.setUrl(s3Service.modifyFilenameToUrl(fileName));
+            });
+        }
+
+        return recordDTO;
     }
 
     @Override
