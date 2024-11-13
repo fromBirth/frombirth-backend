@@ -13,10 +13,12 @@ import com.choongang.frombirth_backend.service.PhotoService;
 import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.service.S3Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
+import java.time.temporal.TemporalAdjusters;
 import java.util.stream.Stream;
 import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
@@ -205,6 +207,14 @@ public class RecordServiceImpl implements RecordService {
                     photo.setUrl(s3Service.modifyFilenameToUrl(fileName));
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer getAllRecordCount(Integer childId) {
+        // 이번 주 월요일과 오늘 날짜 구하기
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        return recordRepository.countByChildId(childId, startOfWeek, today);
     }
 
     @Override
