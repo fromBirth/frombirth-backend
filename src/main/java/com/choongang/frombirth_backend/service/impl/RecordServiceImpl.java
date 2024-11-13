@@ -45,6 +45,13 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public List<RecordDTO> getAllRecords1(Integer childId) {
+        return recordRepository.findByChildId(childId).stream()
+                .map(record -> modelMapper.map(record, RecordDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<RecordDTO> getAllRecords(Integer childId, Integer lastRecordId, Integer size, String query) {
         PageRequest pageRequest = PageRequest.of(0, size);
 

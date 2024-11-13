@@ -24,6 +24,11 @@ public class RecordController {
         this.recordService = recordService;
     }
 
+    @GetMapping("/all/{childId}") // 아이의 전체 기록 불러오기
+    public ResponseEntity<List<RecordDTO>> getAllRecords(@PathVariable Integer childId) {
+        return ResponseEntity.ok(recordService.getAllRecords1(childId));
+    }
+
     @GetMapping(value = {
             "/all/{childId}/{lastRecordId}/{size}/{query}",
             "/all/{childId}/{lastRecordId}/{size}"
