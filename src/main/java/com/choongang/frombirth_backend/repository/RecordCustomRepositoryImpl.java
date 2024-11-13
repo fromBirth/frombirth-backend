@@ -10,7 +10,6 @@ import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
-import com.choongang.frombirth_backend.model.entity.Photo;
 import com.choongang.frombirth_backend.model.entity.QPhoto;
 import com.choongang.frombirth_backend.model.entity.QRecord;
 import com.querydsl.core.BooleanBuilder;
@@ -228,6 +227,43 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .limit(5)
                 .fetch();
+    }
+
+    @Override
+    public RecordDTO getRecordDetail(Integer recordId) {
+        QRecord record = QRecord.record;
+        QPhoto photo = QPhoto.photo;
+
+        return jpaQueryFactory
+                .from(record)
+                .leftJoin(photo)
+                .on(record.recordId.eq(photo.recordId))
+                .where(record.recordId.eq(recordId))
+                .transform(
+                        groupBy(record.recordId).list(
+                                Projections.fields(
+                                        RecordDTO.class,
+                                        record.recordId,
+                                        record.childId,
+                                        record.recordDate,
+                                        record.height,
+                                        record.weight,
+                                        record.title,
+                                        record.content,
+                                        record.createdAt,
+                                        record.updatedAt,
+                                        list(
+                                                Projections.fields(
+                                                        PhotoDTO.class,
+                                                        photo.photoId,
+                                                        photo.recordId,
+                                                        photo.url,
+                                                        photo.createdAt
+                                                )
+                                        ).as("images")
+                                )
+                        )
+                ).get(0);
     }
 
 
