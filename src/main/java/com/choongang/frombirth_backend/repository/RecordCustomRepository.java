@@ -1,6 +1,7 @@
 package com.choongang.frombirth_backend.repository;
 
 import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
+import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import java.time.LocalDate;
@@ -13,4 +14,6 @@ public interface RecordCustomRepository {
     Slice<RecordDTO> getRecordPage (Integer childId, Integer recordId, PageRequest pageRequest, String query);
     Slice<MonthRecordPhotoDTO> getRecordPhotoByMonth(Integer childId, LocalDate lastMonth, PageRequest pageRequest, String query);
     RecordDTO findByChildIdAndDate(Integer childId, String date);
+
+    List<PhotoDTO> getRandomPhotoList(Integer childId);
 }

@@ -1,6 +1,7 @@
 package com.choongang.frombirth_backend.service;
 
 import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
+import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,4 +25,6 @@ public interface RecordService {
 
     // 날짜와 childId로 특정 날짜의 기록 조회
     RecordDTO getRecordByDate(Integer childId, String date);
+
+    List<PhotoDTO> getRandomPhoto(Integer childId);
 }
