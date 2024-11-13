@@ -27,4 +27,6 @@ public interface RecordService {
     RecordDTO getRecordByDate(Integer childId, String date);
 
     List<PhotoDTO> getRandomPhoto(Integer childId);
+
+    Integer getAllRecordCount(Integer childId);
 }

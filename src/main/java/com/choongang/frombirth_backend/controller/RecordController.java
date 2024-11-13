@@ -31,6 +31,11 @@ public class RecordController {
         return ResponseEntity.ok(recordService.getAllRecords(childId));
     }
 
+    @GetMapping("/cnt/{childId}")
+    public ResponseEntity<Integer> getAllRecordCount(@PathVariable Integer childId) {
+        return ResponseEntity.ok(recordService.getAllRecordCount(childId));
+    }
+
     @GetMapping(value = {
             "/all/{childId}/{lastRecordId}/{size}/{query}",
             "/all/{childId}/{lastRecordId}/{size}"

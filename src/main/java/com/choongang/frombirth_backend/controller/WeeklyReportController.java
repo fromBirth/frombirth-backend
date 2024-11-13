@@ -40,4 +40,6 @@ public class WeeklyReportController {
         weeklyReportService.deleteReport(reportId);
         return ResponseEntity.noContent().build();
     }
+
+
 }
