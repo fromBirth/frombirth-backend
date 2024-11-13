@@ -4,7 +4,6 @@ import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
-import com.choongang.frombirth_backend.model.entity.Record;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;

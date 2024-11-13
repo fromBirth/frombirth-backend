@@ -1,5 +1,6 @@
 package com.choongang.frombirth_backend.repository;
 
+import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.entity.Record;
 import java.time.LocalDate;
 import org.springframework.data.domain.PageRequest;
@@ -26,4 +27,7 @@ public interface RecordRepository extends
             @Param("startOfWeek") LocalDate startOfWeek,
             @Param("today") LocalDate today
     );
+
+    Record findFirstByChildIdAndHeightIsNotNullAndWeightIsNotNullOrderByRecordDateDesc(Integer childId);
+
 }
