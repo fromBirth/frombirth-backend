@@ -1,5 +1,7 @@
 package com.choongang.frombirth_backend.service.impl;
 
+import static com.choongang.frombirth_backend.util.Util.getRecordFileName;
+
 import com.choongang.frombirth_backend.model.dto.PhotoDTO;
 import com.choongang.frombirth_backend.model.entity.Photo;
 import com.choongang.frombirth_backend.repository.PhotoRepository;
@@ -30,7 +32,7 @@ public class PhotoServiceImpl implements PhotoService {
     public List<PhotoDTO> getAllPhotosByRecordId(Integer recordId) {
         return photoRepository.findByRecordId(recordId).stream()
                 .map(photo -> {
-                    String fileName = "record" + "/" + recordId + "/" + photo.getUrl();
+                    String fileName = getRecordFileName(recordId, photo.getUrl());
                     photo.setUrl(s3Service.modifyFilenameToUrl(fileName));
                     return modelMapper.map(photo, PhotoDTO.class);
                 })
@@ -70,5 +72,7 @@ public class PhotoServiceImpl implements PhotoService {
     public void deletePhoto(Integer photoId) {
         photoRepository.deleteById(photoId);
     }
+
+
 
 }

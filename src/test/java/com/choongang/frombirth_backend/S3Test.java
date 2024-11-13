@@ -60,7 +60,7 @@ public class S3Test {
     @Test
     public void getObject() {
         // PhotoDTO URL 확인
-//        List<PhotoDTO> list = photoService.getAllPhotosByRecordId(13);
+//        List<PhotoDTO> list = photoService.getAllPhotosByRecordId(36);
 //        System.out.println(list.toString());
     }
 

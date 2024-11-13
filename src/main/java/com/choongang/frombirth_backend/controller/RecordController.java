@@ -4,6 +4,7 @@ import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
 import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import com.choongang.frombirth_backend.service.RecordService;
+import com.choongang.frombirth_backend.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,13 +21,13 @@ public class RecordController {
     private final RecordService recordService;
 
     @Autowired
-    public RecordController(RecordService recordService) {
+    public RecordController(RecordService recordService, S3Service s3Service) {
         this.recordService = recordService;
     }
 
     @GetMapping("/all/{childId}") // 아이의 전체 기록 불러오기
     public ResponseEntity<List<RecordDTO>> getAllRecords(@PathVariable Integer childId) {
-        return ResponseEntity.ok(recordService.getAllRecords1(childId));
+        return ResponseEntity.ok(recordService.getAllRecords(childId));
     }
 
     @GetMapping(value = {
