@@ -75,7 +75,7 @@ public class ChildrenController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/height-data/{childId}")
+    @GetMapping("/growth-data/{childId}")
     public ResponseEntity<Map<String, Object>> getHeightData(@PathVariable Integer childId) {
         System.out.println("키 데이터 받기");
         System.out.println("childId: " + childId);

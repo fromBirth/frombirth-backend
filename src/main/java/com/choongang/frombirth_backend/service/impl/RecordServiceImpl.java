@@ -234,4 +234,10 @@ public class RecordServiceImpl implements RecordService {
                 .map(record -> modelMapper.map(record, RecordDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public RecordDTO getLatestRecordByChildIdWithHeightAndWeight(Integer childId) {
+        Record record =  recordRepository.findFirstByChildIdAndHeightIsNotNullAndWeightIsNotNullOrderByRecordDateDesc(childId);
+        return modelMapper.map(record, RecordDTO.class);
+    }
 }
