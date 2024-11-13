@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
+import java.util.stream.Stream;
 import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +79,12 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public RecordDTO getRecordById(Integer recordId) {
-        Record record = recordRepository.findById(recordId).orElseThrow();
-        return modelMapper.map(record, RecordDTO.class);
+        return Stream.of(recordRepository.getRecordDetail(recordId)).peek(record -> {
+            record.getImages().forEach((photo -> {
+                String fileName = getRecordFileName(photo.getRecordId(), photo.getUrl());
+                photo.setUrl(s3Service.modifyFilenameToUrl(fileName));
+            }));
+        }).findFirst().orElse(null);
     }
 
     @Override
