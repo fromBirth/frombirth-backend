@@ -13,21 +13,34 @@ import com.choongang.frombirth_backend.service.PhotoService;
 import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.service.S3Service;
 
+import java.net.URI;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
 import java.time.temporal.TemporalAdjusters;
+import java.util.Objects;
 import java.util.stream.Stream;
 import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -43,13 +57,17 @@ public class RecordServiceImpl implements RecordService {
     private final PhotoService photoService;
     private final S3Service s3Service;
     private final ModelMapper modelMapper;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public RecordServiceImpl(RecordRepository recordRepository, PhotoService photoService, S3Service s3Service, ModelMapper modelMapper) {
+    public RecordServiceImpl(RecordRepository recordRepository, PhotoService photoService, S3Service s3Service,
+                             ModelMapper modelMapper,
+                             RestTemplate restTemplate) {
         this.recordRepository = recordRepository;
         this.photoService = photoService;
         this.s3Service = s3Service;
         this.modelMapper = modelMapper;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -115,6 +133,8 @@ public class RecordServiceImpl implements RecordService {
                     .build();
             photoService.addPhoto(photoDTO);
         }
+
+        postVideoForResult(video, record);
     }
 
     @Override
@@ -158,7 +178,8 @@ public class RecordServiceImpl implements RecordService {
         YearMonth yearMonth = YearMonth.parse(lastMonth, DateTimeFormatter.ofPattern("yyyy-MM"));
         LocalDate localDate = yearMonth.atDay(1); // 해당 월의 첫날로 변환
 
-        Slice<MonthRecordPhotoDTO> page = recordRepository.getRecordPhotoByMonth(childId, localDate, pageRequest, query);
+        Slice<MonthRecordPhotoDTO> page = recordRepository.getRecordPhotoByMonth(childId, localDate, pageRequest,
+                query);
         return page.getContent().stream()
                 .peek(recordDTO -> recordDTO.getPhotos().forEach(photo -> {
                     String fileName = getRecordFileName(photo.getRecordId(), photo.getUrl());
@@ -260,5 +281,32 @@ public class RecordServiceImpl implements RecordService {
         LocalDate endDate = startDate.plusDays(6); // 지난주 일요일
 
         return recordRepository.findContentByChildIdWeekly(childId, startDate, endDate);
+    }
+
+    @Value("${python.url}")
+    private String pythonUrl;
+
+    @Async
+    protected void postVideoForResult(MultipartFile video, Record record) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", new ByteArrayResource(video.getBytes()) {
+            @Override
+            public String getFilename() {
+                return video.getOriginalFilename();
+            }
+        });
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(pythonUrl + "/analysisVideo", HttpMethod.POST,
+                requestEntity, String.class);
+
+        Integer result = Integer.parseInt(Objects.requireNonNull(response.getBody()));
+
+        record.setVideoResult(result);
+        recordRepository.save(record);
     }
 }
