@@ -57,6 +57,7 @@ public class ChildrenController {
 
         try {
             ChildrenDTO result = childrenService.addChild(childrenDTO, profile);
+            result.setProfilePicture(s3Service.modifyFilenameToUrl("children/" + result.getChildId() + "/" + result.getProfilePicture()));
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
