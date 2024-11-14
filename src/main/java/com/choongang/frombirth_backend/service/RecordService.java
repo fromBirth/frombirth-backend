@@ -29,4 +29,7 @@ public interface RecordService {
     List<PhotoDTO> getRandomPhoto(Integer childId);
     Integer getAllRecordCount(Integer childId);
     List<String> getRecordContentWeekly(Integer childId);
+
+    //height와 weight가 null이 아닌 일기 count
+    Integer countRecordsWithNonNullHeightAndWeightByChildId(Integer childId);
 }

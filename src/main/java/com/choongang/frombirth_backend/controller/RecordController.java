@@ -120,11 +120,17 @@ public class RecordController {
         recordService.deleteRecord(recordId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/growth-data/{childId}")
+    @GetMapping("/growth-data-last/{childId}")
     public ResponseEntity<RecordDTO> getGrowthData(@PathVariable Integer childId) {
         RecordDTO record = recordService.getLatestRecordByChildIdWithHeightAndWeight(childId);
 
         // record가 null일 경우 404 응답 반환
         return ResponseEntity.ok(Objects.requireNonNullElseGet(record, RecordDTO::new));
+    }
+
+    @GetMapping("/growth-data-count/{childId}")
+    public ResponseEntity<Integer> getGrowthDataCount(@PathVariable Integer childId) {
+        // record가 null일 경우 404 응답 반환
+        return ResponseEntity.ok(recordService.countRecordsWithNonNullHeightAndWeightByChildId(childId));
     }
 }

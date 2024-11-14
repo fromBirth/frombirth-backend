@@ -37,4 +37,8 @@ public interface RecordRepository extends
             @Param("childId") Integer childId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    //height와 weight가 null이 아닌 데이터의 개수
+    @Query("SELECT COUNT(r) FROM Record r WHERE r.childId = :childId AND r.height IS NOT NULL AND r.weight IS NOT NULL")
+    Integer countByChildIdAndHeightAndWeightNotNull(@Param("childId") Integer childId);
 }

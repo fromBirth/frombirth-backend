@@ -328,4 +328,9 @@ public class RecordServiceImpl implements RecordService {
         record.setVideoResult(result);
         recordRepository.save(record);
     }
+
+    @Override
+    public Integer countRecordsWithNonNullHeightAndWeightByChildId(Integer childId) {
+        return recordRepository.countByChildIdAndHeightAndWeightNotNull(childId);
+    }
 }
