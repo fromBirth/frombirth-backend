@@ -23,11 +23,9 @@ public class AgeGenderStatisticsController {
 
     @GetMapping("/average/{childId}")
     public ResponseEntity<AgeGenderStatisticsDTO> getAverageStatistics(@PathVariable Integer childId){
+        System.out.println("ㅇ"+childId);
         ChildrenDTO children = childrenService.getChildById(childId);
         AgeGenderStatisticsDTO averageStatistics = ageGenderStatisticsService.getAverageStatistics(children);
-        if (averageStatistics == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(averageStatistics);
     }
 
