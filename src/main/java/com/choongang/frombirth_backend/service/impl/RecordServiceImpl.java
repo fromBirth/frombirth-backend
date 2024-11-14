@@ -139,7 +139,7 @@ public class RecordServiceImpl implements RecordService {
             photoService.addPhoto(photoDTO);
         }
 
-        postVideoForResult(video, record);
+        if (video != null) postVideoForResult(video, record);
     }
 
     @Override
