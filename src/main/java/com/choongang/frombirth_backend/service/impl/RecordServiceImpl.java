@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 
 import java.time.temporal.TemporalAdjusters;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
@@ -268,7 +269,10 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public RecordDTO getLatestRecordByChildIdWithHeightAndWeight(Integer childId) {
-        return modelMapper.map(recordRepository.findFirstByChildIdAndHeightIsNotNullAndWeightIsNotNullOrderByRecordDateDesc(childId), RecordDTO.class);
+        Optional<Record> record = Optional.ofNullable(
+                recordRepository.findFirstByChildIdAndHeightIsNotNullAndWeightIsNotNullOrderByRecordDateDesc(
+                        childId));
+        return record.map(value -> modelMapper.map(value, RecordDTO.class)).orElse(null);
     }
 
     @Override
