@@ -76,5 +76,6 @@ public class AppConfig {
         System.setProperty("AWS_AI_URL", dotenv.get("AWS_AI_URL"));
         // x-api-key 값
         System.setProperty("AWS_X_API_KEY", dotenv.get("AWS_X_API_KEY"));
+
     }
 }

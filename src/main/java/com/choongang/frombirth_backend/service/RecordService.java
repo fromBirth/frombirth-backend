@@ -28,6 +28,7 @@ public interface RecordService {
     RecordDTO getLatestRecordByChildIdWithHeightAndWeight(Integer childId);
     List<PhotoDTO> getRandomPhoto(Integer childId);
     Integer getAllRecordCount(Integer childId);
+    Integer getAllRecordCountWeekly(Integer childId);
     List<String> getRecordContentWeekly(Integer childId);
 
     //height와 weight가 null이 아닌 일기 count

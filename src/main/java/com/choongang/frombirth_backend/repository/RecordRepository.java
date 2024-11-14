@@ -29,6 +29,9 @@ public interface RecordRepository extends
             @Param("today") LocalDate today
     );
 
+    @Query("SELECT COUNT(r) FROM Record r where r.childId = :childId")
+    Integer findCountByChildId(Integer childId);
+
     Record findFirstByChildIdAndHeightIsNotNullAndWeightIsNotNullOrderByRecordDateDesc(Integer childId);
 
 

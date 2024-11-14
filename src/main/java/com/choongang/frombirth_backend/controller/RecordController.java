@@ -37,6 +37,11 @@ public class RecordController {
         return ResponseEntity.ok(recordService.getAllRecordCount(childId));
     }
 
+    @GetMapping("/cnt/{childId}/week")
+    public ResponseEntity<Integer> getAllRecordCountWeekly(@PathVariable Integer childId) {
+        return ResponseEntity.ok(recordService.getAllRecordCountWeekly(childId));
+    }
+
     @GetMapping(value = {
             "/all/{childId}/{lastRecordId}/{size}/{query}",
             "/all/{childId}/{lastRecordId}/{size}"

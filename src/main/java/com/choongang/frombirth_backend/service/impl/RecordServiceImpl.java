@@ -238,6 +238,11 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public Integer getAllRecordCount(Integer childId) {
+        return recordRepository.findCountByChildId(childId);
+    }
+
+    @Override
+    public Integer getAllRecordCountWeekly(Integer childId) {
         // 이번 주 월요일과 오늘 날짜 구하기
         LocalDate today = LocalDate.now();
         LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
