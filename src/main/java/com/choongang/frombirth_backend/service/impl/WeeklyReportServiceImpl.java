@@ -8,7 +8,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,6 +67,11 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 
         // 업데이트 성공
         return true;
+    }
+
+    @Override
+    public Integer getAllReportCount(Integer childId) {
+        return weeklyReportRepository.countByChildId(childId);
     }
 }
 
