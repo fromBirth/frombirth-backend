@@ -71,5 +71,10 @@ public class AppConfig {
         System.setProperty("AWS_SECRET_KEY", dotenv.get("AWS_SECRET_KEY"));
         System.setProperty("AWS_REGION", dotenv.get("AWS_REGION"));
         System.setProperty("S3_BUCKET_NAME", dotenv.get("S3_BUCKET_NAME"));
+
+        // AI 요청 주소
+        System.setProperty("AWS_AI_URL", dotenv.get("AWS_AI_URL"));
+        // x-api-key 값
+        System.setProperty("AWS_X_API_KEY", dotenv.get("AWS_X_API_KEY"));
     }
 }

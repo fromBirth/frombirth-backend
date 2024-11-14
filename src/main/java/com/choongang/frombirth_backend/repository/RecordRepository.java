@@ -1,14 +1,15 @@
 package com.choongang.frombirth_backend.repository;
 
-import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.entity.Record;
-import java.time.LocalDate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -30,4 +31,10 @@ public interface RecordRepository extends
 
     Record findFirstByChildIdAndHeightIsNotNullAndWeightIsNotNullOrderByRecordDateDesc(Integer childId);
 
+
+    @Query("SELECT r.content FROM Record r WHERE r.childId = :childId AND r.recordDate BETWEEN :startDate AND :endDate")
+    List<String> findContentByChildIdWeekly(
+            @Param("childId") Integer childId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 }

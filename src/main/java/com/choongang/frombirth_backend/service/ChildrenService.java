@@ -13,4 +13,5 @@ public interface ChildrenService {
     ChildrenDTO addChild(ChildrenDTO childrenDTO, MultipartFile profile) throws IOException;
     void updateChild(ChildrenDTO childrenDTO);
     void deleteChild(Integer childId);
+    List<Integer> getAllChildIds();
 }

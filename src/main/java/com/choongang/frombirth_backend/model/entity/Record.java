@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -25,11 +26,11 @@ public class Record {
     @Column(name = "record_date", nullable = false)
     private LocalDate recordDate;
 
-    @Column(name = "height")
-    private Float height;
+    @Column(name = "height", precision = 4, scale = 1)
+    private BigDecimal height;
 
-    @Column(name = "weight")
-    private Float weight;
+    @Column(name = "weight", precision = 4, scale = 1)
+    private BigDecimal weight;
 
     @Column(name = "title", columnDefinition = "TEXT")
     private String title;

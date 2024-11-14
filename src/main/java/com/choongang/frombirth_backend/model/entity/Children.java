@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -43,17 +44,17 @@ public class Children {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "birth_weight")
-    private Integer birthWeight;
+    @Column(name = "birth_weight", precision = 4, scale = 1)  // 전체 4자리, 소수점 이하 1자리
+    private BigDecimal birthWeight;
+
+    @Column(name = "birth_height", precision = 4, scale = 1)
+    private BigDecimal birthHeight;
 
     @Column(name = "birth_time")
     private LocalTime birthTime;
 
     @Column(name = "profile_picture")
     private String profilePicture; // 아기 대표 사진
-
-    @Column(name = "birth_height")
-    private Integer birthHeight; // 출생 키
 
 //    @OneToMany(mappedBy = "children", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Record> records = new ArrayList<>();
