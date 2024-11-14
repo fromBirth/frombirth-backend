@@ -16,6 +16,7 @@ import com.choongang.frombirth_backend.service.S3Service;
 import java.net.URI;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
@@ -240,6 +241,16 @@ public class RecordServiceImpl implements RecordService {
         // 이번 주 월요일과 오늘 날짜 구하기
         LocalDate today = LocalDate.now();
         LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        // 현재 날짜와 시간을 구합니다.
+        LocalDateTime now = LocalDateTime.now();
+
+        // 월요일 오전 12시에서 오전 9시 사이인지 확인
+        if (now.getDayOfWeek() == DayOfWeek.MONDAY &&
+                now.toLocalTime().isAfter(LocalTime.MIDNIGHT) &&
+                now.toLocalTime().isBefore(LocalTime.of(9, 0))) {
+            startOfWeek = startOfWeek.minusWeeks(1); // 지난주 월요일로 설정
+        }
         return recordRepository.countByChildId(childId, startOfWeek, today);
     }
 
