@@ -44,7 +44,7 @@ public class Children {
     private LocalDateTime updatedAt;
 
     @Column(name = "birth_weight")
-    private Integer birthWeight;
+    private Double birthWeight;
 
     @Column(name = "birth_time")
     private LocalTime birthTime;
@@ -53,7 +53,7 @@ public class Children {
     private String profilePicture; // 아기 대표 사진
 
     @Column(name = "birth_height")
-    private Integer birthHeight; // 출생 키
+    private Double birthHeight; // 출생 키
 
 //    @OneToMany(mappedBy = "children", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Record> records = new ArrayList<>();

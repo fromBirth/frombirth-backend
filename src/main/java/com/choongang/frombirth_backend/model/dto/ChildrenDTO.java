@@ -25,9 +25,9 @@ public class ChildrenDTO {
     private String bloodType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Integer birthWeight;
+    private Double birthWeight;
     private LocalTime birthTime;
     private String profilePicture;
-    private Integer birthHeight;
+    private Double birthHeight;
 }
 
