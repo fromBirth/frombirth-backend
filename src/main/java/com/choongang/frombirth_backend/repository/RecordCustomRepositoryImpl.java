@@ -90,6 +90,8 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
 
             if (recordDate == null) {
                 return new SliceImpl<RecordDTO>(new ArrayList<RecordDTO>(), pageRequest, false);
+            } else {
+                recordDate = recordDate.plusDays(1);
             }
         }
         System.out.println(recordDate);
