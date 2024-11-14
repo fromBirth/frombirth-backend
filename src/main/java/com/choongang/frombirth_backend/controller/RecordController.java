@@ -6,6 +6,7 @@ import com.choongang.frombirth_backend.model.dto.RecordDTO;
 import com.choongang.frombirth_backend.model.dto.RecordPhotoDTO;
 import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.service.S3Service;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -124,9 +125,6 @@ public class RecordController {
         RecordDTO record = recordService.getLatestRecordByChildIdWithHeightAndWeight(childId);
 
         // record가 null일 경우 404 응답 반환
-        if (record == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(record);
+        return ResponseEntity.ok(Objects.requireNonNullElseGet(record, RecordDTO::new));
     }
 }
