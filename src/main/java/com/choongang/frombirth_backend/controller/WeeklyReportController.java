@@ -24,6 +24,11 @@ public class WeeklyReportController {
         return ResponseEntity.ok(weeklyReportService.getAllReports(childId));
     }
 
+    @GetMapping("/cnt/{childId}")
+    public ResponseEntity<Integer> getAllRecordCount(@PathVariable Integer childId) {
+        return ResponseEntity.ok(weeklyReportService.getAllReportCount(childId));
+    }
+
     @GetMapping("/report/{reportId}")
     public ResponseEntity<WeeklyReportDTO> getReportById(@PathVariable Integer reportId) {
         return ResponseEntity.ok(weeklyReportService.getReportById(reportId));

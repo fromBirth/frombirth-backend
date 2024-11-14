@@ -10,4 +10,5 @@ public interface WeeklyReportService {
     void addReport(WeeklyReportDTO weeklyReportDTO);               // 보고서 추가
     void deleteReport(Integer reportId);                            // 보고서 삭제
     boolean updateReportReadStatus(Integer reportId, boolean isRead);  // 보고서 읽음 상태 업데이트
+    Integer getAllReportCount(Integer childId);
 }
