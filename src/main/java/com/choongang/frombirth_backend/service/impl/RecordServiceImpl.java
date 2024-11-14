@@ -90,6 +90,10 @@ public class RecordServiceImpl implements RecordService {
 
         System.out.println(recordPage);
 
+        if (recordPage.getContent().isEmpty()) {
+            return new ArrayList<>();
+        }
+
         return recordPage.getContent().stream()
                 .peek(recordDTO -> recordDTO.getImages().forEach(photo -> {
                     String fileName = getRecordFileName(photo.getRecordId(), photo.getUrl());
@@ -135,7 +139,7 @@ public class RecordServiceImpl implements RecordService {
             photoService.addPhoto(photoDTO);
         }
 
-        postVideoForResult(video, record);
+        if (video != null) postVideoForResult(video, record);
     }
 
     @Override
