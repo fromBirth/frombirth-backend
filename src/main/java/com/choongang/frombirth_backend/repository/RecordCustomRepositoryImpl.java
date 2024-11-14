@@ -28,6 +28,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.transaction.annotation.Transactional;
 
 public class RecordCustomRepositoryImpl implements RecordCustomRepository {
     @PersistenceContext
@@ -40,6 +41,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RecordPhotoDTO> getRecordByIdAndMonth(Integer childId, String month) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
@@ -67,6 +69,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Slice<RecordDTO> getRecordPage(Integer childId, Integer recordId, PageRequest pageRequest, String query) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
@@ -149,6 +152,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public RecordDTO findByChildIdAndDate(Integer childId, String date) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
@@ -211,6 +215,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<PhotoDTO> getRandomPhotoList(Integer childId) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
@@ -235,6 +240,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RecordDTO getRecordDetail(Integer recordId) {
         QRecord record = QRecord.record;
         QPhoto photo = QPhoto.photo;
@@ -273,6 +279,7 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Slice<MonthRecordPhotoDTO> getRecordPhotoByMonth(Integer childId, LocalDate lastMonth,
                                                             PageRequest pageRequest, String query) {
         QRecord record = QRecord.record;
