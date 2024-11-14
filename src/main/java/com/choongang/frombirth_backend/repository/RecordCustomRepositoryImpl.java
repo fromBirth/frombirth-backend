@@ -19,6 +19,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -83,6 +84,10 @@ public class RecordCustomRepositoryImpl implements RecordCustomRepository {
                     .where(record.childId.eq(childId))
                     .orderBy(record.recordDate.desc())
                     .fetchFirst();  // 가장 최근 날짜의 recordDate 반환
+
+            if (recordDate == null) {
+                return new SliceImpl<RecordDTO>(new ArrayList<RecordDTO>(), pageRequest, false);
+            }
         }
         System.out.println(recordDate);
 
