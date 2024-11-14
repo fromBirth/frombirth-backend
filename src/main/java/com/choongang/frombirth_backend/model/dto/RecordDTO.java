@@ -1,6 +1,8 @@
 package com.choongang.frombirth_backend.model.dto;
 
 import com.choongang.frombirth_backend.model.entity.Record;
+
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.*;
 
@@ -17,8 +19,8 @@ public class RecordDTO {
     private Integer recordId;
     private Integer childId;
     private LocalDate recordDate;
-    private Float height;
-    private Float weight;
+    private BigDecimal height;
+    private BigDecimal weight;
     private String title;
     private String content;
     private Integer videoResult;

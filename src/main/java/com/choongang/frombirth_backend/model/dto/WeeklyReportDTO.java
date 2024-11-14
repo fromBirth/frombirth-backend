@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class WeeklyReportDTO {
     private Integer reportId;
     private Integer childId;
