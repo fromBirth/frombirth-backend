@@ -24,7 +24,7 @@ public class WeeklyReport {
     @Column(name = "risk_level")
     private Integer riskLevel;
 
-    @Column(name = "feedback", length = 100)
+    @Column(name = "feedback", columnDefinition = "TEXT")
     private String feedback;
 
     @Column(name = "created_at", nullable = false)

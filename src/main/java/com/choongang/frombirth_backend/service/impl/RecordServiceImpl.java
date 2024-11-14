@@ -275,6 +275,18 @@ public class RecordServiceImpl implements RecordService {
         return record.map(value -> modelMapper.map(value, RecordDTO.class)).orElse(null);
     }
 
+    @Override
+    public List<String> getRecordContentWeekly(Integer childId) {
+        // 오늘 날짜 기준으로 지난주 월요일과 일요일의 날짜 및 시간을 계산
+        LocalDate startDate = LocalDate.now()
+                .minusWeeks(1)
+                .with(DayOfWeek.MONDAY); // 지난주 월요일
+
+        LocalDate endDate = startDate.plusDays(6); // 지난주 일요일
+
+        return recordRepository.findContentByChildIdWeekly(childId, startDate, endDate);
+    }
+
     @Value("${python.url}")
     private String pythonUrl;
 

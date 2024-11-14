@@ -22,11 +22,11 @@ public interface RecordService {
 
     List<RecordDTO> getRecordsByChildIdWithNonNullHeight(Integer childId,Integer limit);
     List<RecordDTO> getRecordsByChildIdAndWeightIsNotNullOrderByRecordDateDesc(Integer childId, Integer limit);
-    RecordDTO getLatestRecordByChildIdWithHeightAndWeight(Integer childId);
+
     // 날짜와 childId로 특정 날짜의 기록 조회
     RecordDTO getRecordByDate(Integer childId, String date);
-
+    RecordDTO getLatestRecordByChildIdWithHeightAndWeight(Integer childId);
     List<PhotoDTO> getRandomPhoto(Integer childId);
-
     Integer getAllRecordCount(Integer childId);
+    List<String> getRecordContentWeekly(Integer childId);
 }

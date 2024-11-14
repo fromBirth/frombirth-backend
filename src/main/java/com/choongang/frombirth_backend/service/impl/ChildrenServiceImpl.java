@@ -118,4 +118,9 @@ public class ChildrenServiceImpl implements ChildrenService {
     public void deleteChild(Integer childId) {
         childrenRepository.deleteById(childId);
     }
+
+    @Override
+    public List<Integer> getAllChildIds() {
+        return childrenRepository.findAllChildIds();
+    }
 }

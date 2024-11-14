@@ -3,6 +3,7 @@ package com.choongang.frombirth_backend.model.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,9 +26,9 @@ public class ChildrenDTO {
     private String bloodType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Double birthWeight;
+    private BigDecimal birthWeight;
+    private BigDecimal birthHeight;
     private LocalTime birthTime;
     private String profilePicture;
-    private Double birthHeight;
 }
 
