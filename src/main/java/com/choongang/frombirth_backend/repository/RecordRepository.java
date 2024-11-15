@@ -30,7 +30,7 @@ public interface RecordRepository extends
     );
 
     @Query("SELECT COUNT(r) FROM Record r where r.childId = :childId")
-    Integer findCountByChildId(Integer childId);
+    Integer findCountByChildId(@Param("childId") Integer childId);
 
     Record findFirstByChildIdAndHeightIsNotNullAndWeightIsNotNullOrderByRecordDateDesc(Integer childId);
 
