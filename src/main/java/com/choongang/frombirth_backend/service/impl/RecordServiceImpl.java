@@ -1,6 +1,5 @@
 package com.choongang.frombirth_backend.service.impl;
 
-import static com.choongang.frombirth_backend.service.impl.PhotoServiceImpl.*;
 import static com.choongang.frombirth_backend.util.Util.getRecordFileName;
 
 import com.choongang.frombirth_backend.model.dto.MonthRecordPhotoDTO;
@@ -13,7 +12,6 @@ import com.choongang.frombirth_backend.service.PhotoService;
 import com.choongang.frombirth_backend.service.RecordService;
 import com.choongang.frombirth_backend.service.S3Service;
 
-import java.net.URI;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,7 +22,6 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.bytebuddy.asm.Advice.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class RecordServiceImpl implements RecordService {
@@ -340,7 +336,7 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public Integer getVideoResultCount(Integer childId) {
+    public Double getVideoResultCount(Integer childId) {
         return recordRepository.getVideoResultCount(childId, LocalDate.now());
     }
 }

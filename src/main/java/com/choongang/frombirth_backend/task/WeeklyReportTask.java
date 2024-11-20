@@ -116,7 +116,7 @@ public class WeeklyReportTask {
                     riskLevel = totalMatchesOpt.map(this::calculateRiskLevel).orElse(null);
                 }
 
-                Integer videoResultCount = recordService.getVideoResultCount(childId);
+                Double videoResultCount = recordService.getVideoResultCount(childId);
 
                 // WeeklyReport 엔티티에 저장
                 WeeklyReportDTO dto = WeeklyReportDTO.builder()

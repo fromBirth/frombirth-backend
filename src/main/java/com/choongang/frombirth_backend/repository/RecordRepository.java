@@ -42,6 +42,6 @@ public interface RecordRepository extends
     @Query("SELECT COUNT(r) FROM Record r WHERE r.childId = :childId AND r.height IS NOT NULL AND r.weight IS NOT NULL")
     Integer countByChildIdAndHeightAndWeightNotNull(@Param("childId") Integer childId);
 
-    @Query("SELECT SUM(r.videoResult) FROM Record r WHERE r.childId = :childId AND r.recordDate between :now-8 and :now-1")
-    Integer getVideoResultCount(Integer childId, LocalDate now);
+    @Query("SELECT SUM(r.videoResult) / COUNT(r.videoResult) FROM Record r WHERE r.childId = :childId AND r.recordDate between :now-8 and :now-1")
+    Double getVideoResultCount(Integer childId, LocalDate now);
 }
