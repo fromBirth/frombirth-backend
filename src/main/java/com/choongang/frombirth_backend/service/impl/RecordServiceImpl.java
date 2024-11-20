@@ -337,6 +337,9 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public Double getVideoResultCount(Integer childId) {
-        return recordRepository.getVideoResultCount(childId, LocalDate.now());
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(8);
+        LocalDate endDate = startDate.minusDays(1);
+        return recordRepository.getVideoResultCount(childId, startDate, endDate);
     }
 }
