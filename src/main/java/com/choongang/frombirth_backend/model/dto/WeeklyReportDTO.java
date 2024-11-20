@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class WeeklyReportDTO {
     private Integer reportId;
     private Integer childId;
+    private Double videoResultCount;
     private Integer riskLevel;
     private String feedback;
     private LocalDateTime createdAt;
