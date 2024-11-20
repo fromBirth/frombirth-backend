@@ -45,7 +45,7 @@ public interface RecordRepository extends
     @Query("SELECT " +
             "CASE " +
             "   WHEN COUNT(r.videoResult) < 4 THEN 0 " +
-            "   ELSE SUM(r.videoResult) / COUNT(r.videoResult) " +
+            "   ELSE (SUM(r.videoResult) / COUNT(r.videoResult)) " +
             "END " +
             "FROM Record r " +
             "WHERE r.childId = :childId " +
