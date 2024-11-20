@@ -338,4 +338,9 @@ public class RecordServiceImpl implements RecordService {
     public Integer countRecordsWithNonNullHeightAndWeightByChildId(Integer childId) {
         return recordRepository.countByChildIdAndHeightAndWeightNotNull(childId);
     }
+
+    @Override
+    public Integer getVideoResultCount(Integer childId) {
+        return recordRepository.getVideoResultCount(childId, LocalDate.now());
+    }
 }
