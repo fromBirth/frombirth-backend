@@ -1,13 +1,10 @@
 package com.choongang.frombirth_backend.repository;
 
 import com.choongang.frombirth_backend.model.entity.Record;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -44,4 +41,7 @@ public interface RecordRepository extends
     //height와 weight가 null이 아닌 데이터의 개수
     @Query("SELECT COUNT(r) FROM Record r WHERE r.childId = :childId AND r.height IS NOT NULL AND r.weight IS NOT NULL")
     Integer countByChildIdAndHeightAndWeightNotNull(@Param("childId") Integer childId);
+
+    @Query("SELECT SUM(r.videoResult) FROM Record r WHERE r.childId = :childId AND r.recordDate between :now-8 and :now-1")
+    Integer getVideoResultCount(Integer childId, LocalDate now);
 }
