@@ -16,6 +16,7 @@ public class WeeklyReportDTO {
     private Integer riskLevel;
     private String feedback;
     private LocalDateTime createdAt;
+    private Double videoResultCount;
     private boolean isRead;
 }
 

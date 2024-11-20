@@ -123,6 +123,7 @@ public class WeeklyReportTask {
                         .childId(childId)
                         .feedback(feedback)
                         .riskLevel(riskLevel)
+                        .videoResultCount(videoResultCount)
                         .build();
 
                 weeklyReportService.addReport(dto);
