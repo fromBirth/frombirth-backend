@@ -25,7 +25,7 @@ public class WeeklyReport {
     private Integer riskLevel;
 
     @Column(name = "video_result_count")
-    private Integer videoResultCount;
+    private Double videoResultCount;
 
     @Column(name = "feedback", columnDefinition = "TEXT")
     private String feedback;

@@ -33,5 +33,5 @@ public interface RecordService {
 
     //height와 weight가 null이 아닌 일기 count
     Integer countRecordsWithNonNullHeightAndWeightByChildId(Integer childId);
-    Integer getVideoResultCount(Integer childId);
+    Double getVideoResultCount(Integer childId);
 }
