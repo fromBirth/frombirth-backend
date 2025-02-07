@@ -209,3 +209,5 @@ gradle-app.setting
 *.xml
 .idea/
 application.properties
+# application.properties 무시
+src/main/resources/application.properties
